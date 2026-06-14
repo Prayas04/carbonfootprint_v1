@@ -1,0 +1,177 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface-tint: #a4d64c;
+  --color-on-tertiary-fixed: #2a1700;
+  --color-on-error: #690005;
+  --color-tertiary-fixed-dim: #ffb95f;
+  --color-surface-container-highest: #2e3447;
+  --color-tertiary: #fffdff;
+  --color-surface: #0c1324;
+  --color-on-secondary-fixed-variant: #005236;
+  --color-on-error-container: #ffdad6;
+  --color-secondary-fixed-dim: #4edea3;
+  --color-surface-container-low: #151b2d;
+  --color-on-secondary-fixed: #002113;
+  --color-background: #0c1324;
+  --color-surface-container-high: #23293c;
+  --color-surface-container-lowest: #070d1f;
+  --color-on-tertiary-container: #8c5800;
+  --color-tertiary-container: #ffdbb4;
+  --color-on-primary-fixed-variant: #354e00;
+  --color-surface-bright: #33394c;
+  --color-secondary-fixed: #6ffbbe;
+  --color-secondary: #4edea3;
+  --color-on-primary-fixed: #131f00;
+  --color-on-surface: #dce1fb;
+  --color-inverse-surface: #dce1fb;
+  --color-error: #ffb4ab;
+  --color-inverse-primary: #476800;
+  --color-on-secondary-container: #00311f;
+  --color-surface-container: #191f31;
+  --color-on-tertiary: #472a00;
+  --color-outline-variant: #434938;
+  --color-surface-dim: #0c1324;
+  --color-on-primary: #233600;
+  --color-surface-variant: #2e3447;
+  --color-tertiary-fixed: #ffddb8;
+  --color-on-background: #dce1fb;
+  --color-on-secondary: #003824;
+  --color-on-tertiary-fixed-variant: #653e00;
+  --color-outline: #8d937e;
+  --color-primary-fixed: #bff365;
+  --color-primary-container: #bef264;
+  --color-primary: #fefff1;
+  --color-inverse-on-surface: #2a3043;
+  --color-on-primary-container: #4b6e00;
+  --color-on-surface-variant: #c3c9b2;
+  --color-error-container: #93000a;
+  --color-secondary-container: #00a572;
+  --color-primary-fixed-dim: #a4d64c;
+
+  --spacing-container-padding: 24px;
+  --spacing-stack-md: 16px;
+  --spacing-stack-sm: 8px;
+  --spacing-gutter: 16px;
+  --spacing-stack-lg: 32px;
+  --spacing-base: 4px;
+
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-display: "Inter", system-ui, sans-serif;
+
+  --text-label-caps: 11px;
+  --text-label-caps--line-height: 16px;
+  --text-label-caps--letter-spacing: 0.08em;
+  --text-label-caps--font-weight: 700;
+
+  --text-display-lg: 48px;
+  --text-display-lg--line-height: 56px;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-display-lg--font-weight: 700;
+
+  --text-body-sm: 14px;
+  --text-body-sm--line-height: 20px;
+  --text-body-sm--font-weight: 400;
+
+  --text-body-md: 16px;
+  --text-body-md--line-height: 24px;
+  --text-body-md--font-weight: 400;
+
+  --text-headline-sm: 18px;
+  --text-headline-sm--line-height: 24px;
+  --text-headline-sm--font-weight: 600;
+
+  --text-data-lg: 18px;
+  --text-data-lg--line-height: 24px;
+  --text-data-lg--font-weight: 500;
+
+  --text-headline-md: 24px;
+  --text-headline-md--line-height: 32px;
+  --text-headline-md--letter-spacing: -0.01em;
+  --text-headline-md--font-weight: 600;
+
+  --text-data-sm: 12px;
+  --text-data-sm--line-height: 16px;
+  --text-data-sm--letter-spacing: 0.02em;
+  --text-data-sm--font-weight: 500;
+}
+
+/* ── Background grid pattern ── */
+.bg-grid-pattern {
+  background-size: 20px 20px;
+  background-image: linear-gradient(to right, rgba(30, 41, 59, 0.5) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(30, 41, 59, 0.5) 1px, transparent 1px);
+}
+
+/* ── Terminal scrollbar ── */
+.terminal-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.terminal-scroll::-webkit-scrollbar-track {
+  background: #070d1f;
+}
+.terminal-scroll::-webkit-scrollbar-thumb {
+  background: #2e3447;
+  border-radius: 4px;
+}
+
+/* ── Toggle switch ── */
+.toggle-track {
+  width: 36px;
+  height: 20px;
+  border-radius: 10px;
+  background: var(--color-surface-container-highest);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.toggle-track.active {
+  background: var(--color-primary-container);
+}
+.toggle-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s;
+}
+.toggle-track.active .toggle-thumb {
+  transform: translateX(16px);
+}
+.toggle-track:not(.active) .toggle-thumb {
+  background: var(--color-on-surface-variant);
+}
+
+/* ── Override scaffold root constraints ── */
+#root:has(.system-status-root) {
+  width: 100%;
+  max-width: 100%;
+  border-inline: none;
+  text-align: left;
+}
+
+/* ── Reset global index.css heading/body styles ── */
+.system-status-root,
+.system-status-root h1,
+.system-status-root h2,
+.system-status-root h3,
+.system-status-root h4,
+.system-status-root p {
+  all: revert-layer;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+.system-status-root h1,
+.system-status-root h2,
+.system-status-root h3,
+.system-status-root h4 {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
