@@ -1,5 +1,7 @@
 """Async SQLAlchemy engine, session factory, and base model."""
 
+from typing import AsyncGenerator
+
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import DeclarativeBase
 from app.config import get_settings
@@ -9,8 +11,11 @@ settings = get_settings()
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=False,
-    # SQLite-specific: allow same connection across threads in dev
-    connect_args={"check_same_thread": False} if "sqlite" in settings.DATABASE_URL else {},
+    # Supabase (PgBouncer) requires prepared statements disabled, SQLite requires check_same_thread=False
+    connect_args=(
+        {"prepared_statement_cache_size": 0} if "postgres" in settings.DATABASE_URL else
+        {"check_same_thread": False} if "sqlite" in settings.DATABASE_URL else {}
+    ),
 )
 
 AsyncSessionLocal = async_sessionmaker(
@@ -24,7 +29,7 @@ class Base(DeclarativeBase):
     pass
 
 
-async def get_db() -> AsyncSession:
+async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """Dependency that yields an async database session."""
     async with AsyncSessionLocal() as session:
         try:

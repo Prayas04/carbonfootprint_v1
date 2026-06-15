@@ -14,7 +14,10 @@ settings = get_settings()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Create database tables on startup."""
-    await create_tables()
+    try:
+        await create_tables()
+    except Exception as e:
+        print(f"Failed to create tables during startup: {e}")
     yield
 
 
