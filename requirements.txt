@@ -13,4 +13,4 @@ python-multipart==0.0.20
 httpx==0.28.1
 pytest==8.3.5
 pytest-asyncio==0.26.0
-asyncpg==0.29.0 ; sys_platform == 'linux'
+asyncpg==0.31.0 ; sys_platform == 'linux'
