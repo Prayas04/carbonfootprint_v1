@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { getDashboard } from '../api/dashboard.js'
 import Layout from '../components/Layout.jsx'
 import './Dashboard.css'
