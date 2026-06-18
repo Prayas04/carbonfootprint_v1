@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './context/AuthContext.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import ActivityLedger from './pages/ActivityLedger.jsx'
-import SystemStatus from './pages/SystemStatus.jsx'
 import Wallet from './pages/Wallet.jsx'
 import Login from './pages/Login.jsx'
 
@@ -34,7 +33,6 @@ function App() {
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/activity" element={<ProtectedRoute><ActivityLedger /></ProtectedRoute>} />
         <Route path="/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
-        <Route path="/system" element={<ProtectedRoute><SystemStatus /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   )

@@ -8,7 +8,6 @@ const navItems = [
   { icon: 'dashboard', label: 'Dashboard', path: '/dashboard' },
   { icon: 'history', label: 'Activity Logs', path: '/activity', active: true },
   { icon: 'account_balance_wallet', label: 'Wallet', path: '/wallet' },
-  { icon: 'data_check', label: 'System Status', path: '/system' },
 ]
 
 export default function ActivityLedger() {

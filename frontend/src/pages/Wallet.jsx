@@ -8,7 +8,6 @@ const navItems = [
   { icon: 'dashboard', label: 'Dashboard', path: '/dashboard' },
   { icon: 'history', label: 'Activity Logs', path: '/activity' },
   { icon: 'account_balance_wallet', label: 'Wallet', path: '/wallet', active: true },
-  { icon: 'data_check', label: 'System Status', path: '/system' },
 ]
 
 export default function Wallet() {

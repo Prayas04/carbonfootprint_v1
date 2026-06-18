@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.database import create_tables
-from app.routers import auth, dashboard, activity, wallet, system
+from app.routers import auth, dashboard, activity, wallet
 
 settings = get_settings()
 
@@ -42,9 +42,6 @@ app.include_router(auth.router)
 app.include_router(dashboard.router)
 app.include_router(activity.router)
 app.include_router(wallet.router)
-app.include_router(system.router)
-
-
 @app.get("/api/health", tags=["Health"])
 async def health_check():
     """Health check endpoint."""
