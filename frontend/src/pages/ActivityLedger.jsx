@@ -6,8 +6,9 @@ import './ActivityLedger.css'
 
 const navItems = [
   { icon: 'dashboard', label: 'Dashboard', path: '/dashboard' },
-  { icon: 'history', label: 'Activity Logs', path: '/activity', active: true },
-  { icon: 'account_balance_wallet', label: 'Wallet', path: '/wallet' },
+  { icon: 'history', label: 'Activity Log', path: '/activity', active: true },
+  { icon: 'lightbulb', label: 'Insights', path: '/insights' },
+  { icon: 'emoji_events', label: 'Green Rewards', path: '/wallet' },
 ]
 
 export default function ActivityLedger() {
@@ -73,7 +74,7 @@ export default function ActivityLedger() {
           </div>
           <div>
             <h1 className="text-headline-md font-bold text-primary tracking-tight">CarbonTrack</h1>
-            <p className="text-label-caps text-on-surface-variant mt-1 uppercase">Enterprise Console</p>
+            <p className="text-label-caps text-on-surface-variant mt-1 uppercase">Personal Tracker</p>
           </div>
         </div>
 
@@ -99,7 +100,7 @@ export default function ActivityLedger() {
         <div className="px-container-padding mt-stack-md mb-stack-lg">
           <button className="w-full bg-primary-container text-on-primary-container text-body-sm font-semibold py-2.5 rounded shadow-sm hover:brightness-110 transition-all flex items-center justify-center gap-2">
             <span className="material-symbols-outlined text-[18px]">add</span>
-            New Report
+            Log Activity
           </button>
         </div>
 
@@ -121,13 +122,10 @@ export default function ActivityLedger() {
         {/* Header Actions */}
         <div className="flex items-end justify-between mb-stack-sm">
           <div>
-            <h2 className="text-headline-md text-on-surface mb-1">Activity Ledger</h2>
-            <p className="text-body-sm text-on-surface-variant">Detailed transit and logistics emission tracking.</p>
+            <h2 className="text-headline-md text-on-surface mb-1">Activity Log</h2>
+            <p className="text-body-sm text-on-surface-variant">Track your daily activities and their carbon impact.</p>
           </div>
           <div className="flex items-center gap-3">
-            <button className="text-body-sm text-on-surface-variant hover:text-on-surface transition-colors px-4 py-2">
-              API Access
-            </button>
             <button className="bg-transparent border border-surface-container-highest text-on-surface text-body-sm px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors flex items-center gap-2">
               <span className="material-symbols-outlined text-[18px]">download</span>
               Export PDF/CSV
@@ -172,13 +170,15 @@ export default function ActivityLedger() {
             value={modeFilter}
             onChange={(e) => { setModeFilter(e.target.value); setCurrentPage(1); }}
           >
-            <option value="">All Modes</option>
-            <option value="Freight">Freight</option>
-            <option value="Fleet">Fleet</option>
-            <option value="Courier">Courier</option>
-            <option value="Transit">Transit</option>
-            <option value="Commuter Rail">Commuter Rail</option>
-            <option value="E-Bike">E-Bike</option>
+            <option value="">All Activities</option>
+            <option value="Car">🚗 Car</option>
+            <option value="Bus">🚌 Bus</option>
+            <option value="Train">🚆 Train</option>
+            <option value="Bike">🚴 Bike</option>
+            <option value="Walk">🚶 Walk</option>
+            <option value="Flight">✈️ Flight</option>
+            <option value="Diet">🍽️ Diet</option>
+            <option value="Home Energy">⚡ Home Energy</option>
           </select>
           {/* Impact Threshold */}
           <div className="flex items-center gap-3 ml-auto text-data-sm font-mono text-on-surface-variant">

@@ -79,10 +79,10 @@ async def get_metrics(db: AsyncSession, user: User) -> MetricsResponse:
     return MetricsResponse(
         metrics=[
             MetricItem(
-                label="Total Emissions",
+                label="Total CO₂",
                 icon="co2",
                 value=f"{total_emissions:,.0f}",
-                unit="kg CO2e",
+                unit="kg CO₂",
                 trend="-2.4% vs last week",
                 trend_icon="arrow_downward",
                 trend_color="text-secondary",
@@ -96,13 +96,13 @@ async def get_metrics(db: AsyncSession, user: User) -> MetricsResponse:
                 trend_color="text-on-surface-variant",
             ),
             MetricItem(
-                label="Operational Hours",
+                label="Time Active",
                 icon="timer",
                 value=f"{total_hours:,}",
                 unit="hrs",
-                trend="+5.2% over target",
-                trend_icon="warning",
-                trend_color="text-error",
+                trend="Keep it up!",
+                trend_icon="trending_up",
+                trend_color="text-secondary",
             ),
         ]
     )

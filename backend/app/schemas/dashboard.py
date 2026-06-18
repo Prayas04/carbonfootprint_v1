@@ -3,10 +3,11 @@
 from pydantic import BaseModel
 
 
-class TelemetryData(BaseModel):
-    tracker_status: str
-    gps_precision: str
-    sync_rate_hz: float
+class DailyInsight(BaseModel):
+    message: str
+    icon: str
+    streak_days: int
+    co2_saved_today: float
 
 
 class BudgetData(BaseModel):
@@ -33,6 +34,6 @@ class GlobalImpact(BaseModel):
 
 class DashboardResponse(BaseModel):
     global_impact: GlobalImpact
-    telemetry: TelemetryData
+    daily_insight: DailyInsight
     budget: BudgetData | None
     recent_events: list[RecentEvent]

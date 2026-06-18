@@ -6,8 +6,9 @@ import './Wallet.css'
 
 const navItems = [
   { icon: 'dashboard', label: 'Dashboard', path: '/dashboard' },
-  { icon: 'history', label: 'Activity Logs', path: '/activity' },
-  { icon: 'account_balance_wallet', label: 'Wallet', path: '/wallet', active: true },
+  { icon: 'history', label: 'Activity Log', path: '/activity' },
+  { icon: 'lightbulb', label: 'Insights', path: '/insights' },
+  { icon: 'emoji_events', label: 'Green Rewards', path: '/wallet', active: true },
 ]
 
 export default function Wallet() {
@@ -48,7 +49,7 @@ export default function Wallet() {
           </div>
           <div>
             <h1 className="text-headline-md font-bold text-primary tracking-tight">CarbonTrack</h1>
-            <p className="text-label-caps text-on-surface-variant mt-1 uppercase">Enterprise Console</p>
+            <p className="text-label-caps text-on-surface-variant mt-1 uppercase">Personal Tracker</p>
           </div>
         </div>
 
@@ -74,7 +75,7 @@ export default function Wallet() {
         <div className="px-container-padding mt-stack-md mb-stack-lg">
           <button className="w-full bg-primary-container text-on-primary-container text-body-sm font-semibold py-2.5 rounded shadow-sm hover:brightness-110 transition-all flex items-center justify-center gap-2">
             <span className="material-symbols-outlined text-[18px]">add</span>
-            New Report
+            Log Activity
           </button>
         </div>
 
@@ -118,12 +119,12 @@ export default function Wallet() {
           {/* Page Header */}
           <div className="mb-stack-lg flex flex-col md:flex-row md:items-end justify-between gap-stack-md">
             <div>
-              <h1 className="text-display-lg text-on-surface mb-stack-sm">Wallet Control</h1>
-              <p className="text-body-md text-on-surface-variant">Manage your enterprise carbon allowances, settlements, and green nodes.</p>
+              <h1 className="text-display-lg text-on-surface mb-stack-sm">Green Rewards</h1>
+              <p className="text-body-md text-on-surface-variant">Earn points for eco-friendly choices and track your green achievements.</p>
             </div>
             <div className="flex items-center gap-stack-sm">
-              <button className="bg-transparent border border-surface-container-highest text-on-surface text-body-sm py-2 px-4 rounded hover:bg-surface-container-low transition-colors">Export Statement</button>
-              <button className="bg-primary-container text-[#020617] text-body-sm font-bold py-2 px-4 rounded hover:bg-primary-fixed transition-colors">Recharge Budget</button>
+              <button className="bg-transparent border border-surface-container-highest text-on-surface text-body-sm py-2 px-4 rounded hover:bg-surface-container-low transition-colors">View History</button>
+              <button className="bg-primary-container text-[#020617] text-body-sm font-bold py-2 px-4 rounded hover:bg-primary-fixed transition-colors">Log Activity</button>
             </div>
           </div>
 
@@ -140,23 +141,23 @@ export default function Wallet() {
             <div className="col-span-1 md:col-span-4 bg-surface-container-low rounded-xl border border-surface-container-highest p-stack-md relative overflow-hidden flex flex-col justify-between min-h-[240px]">
               <div className="absolute inset-0 bg-gradient-to-br from-[#bef264]/10 to-transparent pointer-events-none"></div>
               <div className="flex justify-between items-start relative z-10">
-                <div className="text-on-surface-variant text-label-caps">Carbon Credit Account</div>
-                <span className="material-symbols-outlined text-primary">contactless</span>
+                <div className="text-on-surface-variant text-label-caps">EcoPoints Balance</div>
+                <span className="material-symbols-outlined text-primary">emoji_events</span>
               </div>
               <div className="relative z-10 mt-stack-lg">
                 <div className="text-display-lg text-primary leading-none">{wallet.balance_tco2e.toLocaleString()}</div>
-                <div className="text-body-sm font-mono text-on-surface-variant mt-1">tCO2e Available Allowance</div>
+                <div className="text-body-sm font-mono text-on-surface-variant mt-1">points earned</div>
               </div>
               <div className="flex justify-between items-end relative z-10 mt-stack-md pt-stack-md border-t border-surface-container-highest">
                 <div>
-                  <div className="text-label-caps text-on-surface-variant">NFC Status</div>
+                  <div className="text-label-caps text-on-surface-variant">Level</div>
                   <div className="text-body-sm text-secondary flex items-center gap-1">
-                    <span className={`w-2 h-2 rounded-full ${wallet.nfc_status === 'Active' ? 'bg-secondary' : 'bg-error'} inline-block`}></span> {wallet.nfc_status}
+                    <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span> Eco Warrior
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-label-caps text-on-surface-variant">Card ID</div>
-                  <div className="text-data-sm font-mono text-on-surface">**** {wallet.card_id_last4}</div>
+                  <div className="text-label-caps text-on-surface-variant">Next Level</div>
+                  <div className="text-data-sm font-mono text-on-surface">1,500 pts</div>
                 </div>
               </div>
             </div>
@@ -164,7 +165,7 @@ export default function Wallet() {
             {/* ── Burn Rate Analytics (8 cols) ── */}
             <div className="col-span-1 md:col-span-8 bg-[#0f172a] rounded-xl border border-[#334155] p-stack-md flex flex-col">
               <div className="flex justify-between items-center mb-stack-md">
-                <h2 className="text-headline-sm text-on-surface">Burn Rate Analytics</h2>
+                <h2 className="text-headline-sm text-on-surface">Weekly Progress</h2>
                 <select className="bg-surface border border-surface-container-highest text-body-sm text-on-surface rounded px-2 py-1 focus:ring-1 focus:ring-primary focus:border-primary outline-none">
                   <option>YTD 2024</option>
                   <option>Q4 2023</option>
@@ -200,7 +201,7 @@ export default function Wallet() {
             {/* ── Transaction Ledger (8 cols) ── */}
             <div className="col-span-1 md:col-span-8 bg-[#0f172a] rounded-xl border border-[#334155] overflow-hidden flex flex-col">
               <div className="p-stack-md border-b border-[#1e293b] flex justify-between items-center bg-surface-container-lowest">
-                <h2 className="text-headline-sm text-on-surface">Transaction Ledger</h2>
+                  <h2 className="text-headline-sm text-on-surface">Rewards History</h2>
                 <button className="text-body-sm text-primary hover:underline">View All</button>
               </div>
               <div className="overflow-x-auto">
@@ -234,7 +235,7 @@ export default function Wallet() {
               <div className="flex justify-between items-center mb-stack-md pb-stack-sm border-b border-[#1e293b]">
                 <h2 className="text-headline-sm text-on-surface flex items-center gap-2">
                   <span className="material-symbols-outlined text-secondary">share_location</span>
-                  Green Nodes
+                  Nearby Green Spots
                 </h2>
               </div>
               <div className="flex flex-col gap-stack-sm flex-1 overflow-y-auto">

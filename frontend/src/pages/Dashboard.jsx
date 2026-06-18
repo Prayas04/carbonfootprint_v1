@@ -6,8 +6,9 @@ import './Dashboard.css'
 
 const navItems = [
   { icon: 'dashboard', label: 'Dashboard', path: '/dashboard', active: true },
-  { icon: 'history', label: 'Activity Logs', path: '/activity' },
-  { icon: 'account_balance_wallet', label: 'Wallet', path: '/wallet' },
+  { icon: 'history', label: 'Activity Log', path: '/activity' },
+  { icon: 'lightbulb', label: 'Insights', path: '/insights' },
+  { icon: 'emoji_events', label: 'Green Rewards', path: '/wallet' },
 ]
 
 export default function Dashboard() {
@@ -31,7 +32,7 @@ export default function Dashboard() {
   }, [])
 
   const globalImpact = data?.global_impact || { total_co2e_kg: 0, trend_data: [] }
-  const telemetry = data?.telemetry || { tracker_status: '—', gps_precision: '—', sync_rate_hz: 0 }
+  const dailyInsight = data?.daily_insight || { message: 'Start logging activities to get personalized insights!', icon: 'lightbulb', streak_days: 0, co2_saved_today: 0 }
   const budget = data?.budget || { cycle_name: '—', total_kg: 0, used_kg: 0, remaining_kg: 0, percent_used: 0 }
   const recentEvents = data?.recent_events || []
 
@@ -46,7 +47,7 @@ export default function Dashboard() {
           </div>
           <div>
             <h1 className="text-headline-md font-bold text-primary tracking-tight">CarbonTrack</h1>
-            <p className="text-label-caps text-on-surface-variant mt-1 uppercase">Enterprise Console</p>
+            <p className="text-label-caps text-on-surface-variant mt-1 uppercase">Personal Tracker</p>
           </div>
         </div>
 
@@ -72,7 +73,7 @@ export default function Dashboard() {
         <div className="px-container-padding mt-stack-md mb-stack-lg">
           <button className="w-full bg-primary-container text-on-primary-container text-body-sm font-semibold py-2.5 rounded shadow-sm hover:brightness-110 transition-all flex items-center justify-center gap-2">
             <span className="material-symbols-outlined text-[18px]">add</span>
-            New Report
+            Log Activity
           </button>
         </div>
 
@@ -130,17 +131,17 @@ export default function Dashboard() {
           {!loading && !error && (
           <div className="flex flex-col gap-gutter">
 
-            {/* ── Top Row: Impact & Telemetry ── */}
+            {/* ── Top Row: My Footprint & Daily Insight ── */}
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-gutter">
 
-              {/* Global Impact Summary */}
+              {/* My Carbon Footprint */}
               <div className="xl:col-span-8 bento-card p-container-padding flex flex-col justify-between relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary-container/5 to-transparent pointer-events-none"></div>
                 <div className="z-10">
-                  <h2 className="text-label-caps text-on-surface-variant uppercase mb-2">Global Impact Summary</h2>
+                  <h2 className="text-label-caps text-on-surface-variant uppercase mb-2">My Carbon Footprint</h2>
                   <div className="flex items-baseline gap-3 mb-6">
                     <span className="text-display-lg text-primary-container tracking-tighter">{globalImpact.total_co2e_kg.toLocaleString()}</span>
-                    <span className="text-headline-sm text-on-surface-variant">kg CO2e</span>
+                    <span className="text-headline-sm text-on-surface-variant">kg CO₂</span>
                   </div>
                 </div>
                 <div className="h-32 w-full mt-auto relative z-10">
@@ -159,33 +160,34 @@ export default function Dashboard() {
                     </defs>
                   </svg>
                   <div className="flex justify-between mt-2 text-label-caps text-on-surface-variant opacity-60">
-                    <span>30D Trend</span>
-                    <span>Current</span>
+                    <span>30-Day Trend</span>
+                    <span>Today</span>
                   </div>
                 </div>
               </div>
 
-              {/* Real-time Telemetry Grid */}
-              <div className="xl:col-span-4 grid grid-cols-2 gap-gutter h-full">
-                <div className="bento-card p-4 flex flex-col justify-center items-center text-center">
-                  <span className="material-symbols-outlined text-secondary-container mb-2" style={{ fontVariationSettings: "'FILL' 1", fontSize: '28px' }}>sensors</span>
-                  <span className="text-data-lg font-mono text-on-surface">{telemetry.tracker_status}</span>
-                  <span className="text-label-caps text-on-surface-variant uppercase mt-1">Tracker Status</span>
-                </div>
-                <div className="bento-card p-4 flex flex-col justify-center items-center text-center">
-                  <span className="material-symbols-outlined text-primary-container mb-2" style={{ fontVariationSettings: "'FILL' 1", fontSize: '28px' }}>my_location</span>
-                  <span className="text-data-lg font-mono text-on-surface">{telemetry.gps_precision}</span>
-                  <span className="text-label-caps text-on-surface-variant uppercase mt-1">GPS Precision</span>
-                </div>
-                <div className="bento-card p-4 flex flex-col justify-center items-center text-center col-span-2">
-                  <div className="flex items-center gap-3 mb-1">
-                    <span className="relative flex h-3 w-3">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-container opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-primary-container"></span>
-                    </span>
-                    <span className="text-data-lg font-mono text-on-surface">{telemetry.sync_rate_hz}Hz</span>
+              {/* Daily Insight & Streak */}
+              <div className="xl:col-span-4 flex flex-col gap-gutter h-full">
+                <div className="bento-card p-5 flex flex-col justify-between flex-1 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-secondary/10 rounded-bl-[80px]"></div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="material-symbols-outlined text-secondary" style={{ fontVariationSettings: "'FILL' 1", fontSize: '22px' }}>{dailyInsight.icon}</span>
+                    <span className="text-label-caps text-on-surface-variant uppercase">Today's Insight</span>
                   </div>
-                  <span className="text-label-caps text-on-surface-variant uppercase">Sync Rate</span>
+                  <p className="text-body-sm text-on-surface leading-relaxed flex-1">{dailyInsight.message}</p>
+                  {dailyInsight.co2_saved_today > 0 && (
+                    <div className="mt-3 flex items-center gap-2 text-secondary">
+                      <span className="material-symbols-outlined text-[16px]">arrow_downward</span>
+                      <span className="text-data-sm font-mono">{dailyInsight.co2_saved_today} kg CO₂ saved today</span>
+                    </div>
+                  )}
+                </div>
+                <div className="bento-card p-5 flex flex-col items-center justify-center text-center">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="material-symbols-outlined text-primary-container" style={{ fontVariationSettings: "'FILL' 1", fontSize: '28px' }}>local_fire_department</span>
+                    <span className="text-display-lg text-primary-container tracking-tighter">{dailyInsight.streak_days}</span>
+                  </div>
+                  <span className="text-label-caps text-on-surface-variant uppercase">Day Green Streak 🌱</span>
                 </div>
               </div>
             </div>
@@ -193,10 +195,10 @@ export default function Dashboard() {
             {/* ── Middle Row: Active Budget & Activity ── */}
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-gutter">
 
-              {/* Active Budget */}
+              {/* Monthly Carbon Goal */}
               <div className="xl:col-span-4 bento-card p-container-padding flex flex-col">
                 <div className="flex justify-between items-start mb-6">
-                  <h2 className="text-label-caps text-on-surface-variant uppercase">Active Budget</h2>
+                  <h2 className="text-label-caps text-on-surface-variant uppercase">Monthly Carbon Goal</h2>
                   <span className="text-label-caps bg-surface-container-high px-2 py-1 rounded text-on-surface">{budget.cycle_name}</span>
                 </div>
                 <div className="mb-4 flex-1">
@@ -204,35 +206,35 @@ export default function Dashboard() {
                     <span className="text-headline-md text-on-surface">
                       {budget.used_kg.toLocaleString()}<span className="text-body-sm text-on-surface-variant ml-1">kg used</span>
                     </span>
-                    <span className="text-body-md text-on-surface-variant">/ {budget.total_kg.toLocaleString()} kg</span>
+                    <span className="text-body-md text-on-surface-variant">/ {budget.total_kg.toLocaleString()} kg goal</span>
                   </div>
                   <div className="h-2 w-full bg-surface-container-high rounded-full overflow-hidden mb-2">
                     <div className="h-full bg-secondary-container rounded-full progress-bar-fill" style={{ width: `${budget.percent_used}%` }}></div>
                   </div>
                   <div className="flex justify-between text-data-sm font-mono text-on-surface-variant">
-                    <span>{budget.percent_used}% Consumed</span>
-                    <span>{budget.remaining_kg.toLocaleString()} kg Remaining</span>
+                    <span>{budget.percent_used}% of goal</span>
+                    <span>{budget.remaining_kg.toLocaleString()} kg left</span>
                   </div>
                 </div>
                 <button className="w-full mt-auto py-2 border border-surface-container-highest rounded text-body-sm text-on-surface hover:bg-surface-container-high transition-colors">
-                  Request Extension
+                  Adjust My Goal
                 </button>
               </div>
 
               {/* Recent Activity Feed */}
               <div className="xl:col-span-8 bento-card overflow-hidden flex flex-col">
                 <div className="p-container-padding border-b border-surface-container-highest flex justify-between items-center bg-surface-container/50">
-                  <h2 className="text-label-caps text-on-surface-variant uppercase">Recent Transit Events</h2>
+                  <h2 className="text-label-caps text-on-surface-variant uppercase">Recent Activities</h2>
                   <Link to="/activity" className="text-body-sm text-primary hover:text-primary-fixed transition-colors">View All</Link>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead>
                       <tr className="border-b border-surface-container-highest bg-surface-container/30">
-                        <th className="px-6 py-3 text-label-caps text-on-surface-variant uppercase">Mode</th>
+                        <th className="px-6 py-3 text-label-caps text-on-surface-variant uppercase">Activity</th>
                         <th className="px-6 py-3 text-label-caps text-on-surface-variant uppercase">Distance</th>
                         <th className="px-6 py-3 text-label-caps text-on-surface-variant uppercase">Duration</th>
-                        <th className="px-6 py-3 text-label-caps text-on-surface-variant uppercase text-right">CO2e Impact</th>
+                        <th className="px-6 py-3 text-label-caps text-on-surface-variant uppercase text-right">Carbon Impact</th>
                       </tr>
                     </thead>
                     <tbody className="text-body-sm">

@@ -43,7 +43,7 @@ export default function Login() {
           </div>
           <div>
             <h1 className="login-brand-title">CarbonTrack</h1>
-            <p className="login-brand-subtitle">ENTERPRISE CONSOLE</p>
+            <p className="login-brand-subtitle">PERSONAL CARBON TRACKER</p>
           </div>
         </div>
 
@@ -51,7 +51,7 @@ export default function Login() {
         <div className="login-card">
           <h2 className="login-heading">{isRegister ? 'Create Account' : 'Welcome Back'}</h2>
           <p className="login-subheading">
-            {isRegister ? 'Sign up to start tracking your carbon footprint.' : 'Sign in to your dashboard.'}
+            {isRegister ? 'Start tracking your carbon footprint today.' : 'Sign in to track your footprint.'}
           </p>
 
           {error && (
@@ -83,7 +83,7 @@ export default function Login() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@company.com"
+                placeholder="you@email.com"
                 required
               />
             </div>

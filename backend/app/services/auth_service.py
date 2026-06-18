@@ -5,7 +5,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.user import User
 from app.models.wallet import Wallet
-from app.models.engine_preference import EnginePreference
 from app.middleware.auth import hash_password, verify_password, create_access_token, create_refresh_token
 
 
@@ -20,7 +19,7 @@ async def register_user(db: AsyncSession, email: str, password: str, full_name: 
         email=email,
         hashed_password=hash_password(password),
         full_name=full_name,
-        role="viewer",
+        role="user",
     )
     db.add(user)
     await db.flush()  # Get the user.id
@@ -28,10 +27,6 @@ async def register_user(db: AsyncSession, email: str, password: str, full_name: 
     # Create associated wallet
     wallet = Wallet(user_id=user.id, balance_tco2e=0.0, card_id_last4="0000")
     db.add(wallet)
-
-    # Create default engine preferences
-    prefs = EnginePreference(user_id=user.id)
-    db.add(prefs)
 
     await db.flush()
     return user

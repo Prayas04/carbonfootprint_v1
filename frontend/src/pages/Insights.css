@@ -1,0 +1,88 @@
+/* ── Insights Page Styles ── */
+
+.insights-root {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Override scaffold root constraints for full-width layout */
+#root:has(.insights-root) {
+  width: 100%;
+  max-width: 100%;
+  border-inline: none;
+  text-align: left;
+}
+
+/* Challenge card hover effect */
+.challenge-card {
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.challenge-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--md-sys-color-primary, #6ffbbe);
+}
+
+/* Achievement badge glow */
+.achievement-badge {
+  position: relative;
+}
+.achievement-badge::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(111, 251, 190, 0.15), rgba(190, 242, 100, 0.1));
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.achievement-badge:hover::after {
+  opacity: 1;
+}
+
+/* Equivalence card shimmer */
+.equivalence-card {
+  position: relative;
+  overflow: hidden;
+}
+.equivalence-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+  transition: left 0.5s ease;
+}
+.equivalence-card:hover::before {
+  left: 100%;
+}
+
+/* Insight hero card gradient animation */
+@keyframes insightGlow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+.insight-hero-glow {
+  animation: insightGlow 4s ease-in-out infinite;
+}
+
+/* Reset global index.css heading/body styles inside the insights page */
+.insights-root,
+.insights-root h1,
+.insights-root h2,
+.insights-root p {
+  all: revert-layer;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+.insights-root h1,
+.insights-root h2 {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}

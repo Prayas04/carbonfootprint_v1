@@ -10,7 +10,7 @@ from app.models.user import User
 from app.schemas.dashboard import (
     DashboardResponse,
     GlobalImpact,
-    TelemetryData,
+    DailyInsight,
     BudgetData,
     RecentEvent,
 )
@@ -40,11 +40,34 @@ async def get_dashboard_data(db: AsyncSession, user: User) -> DashboardResponse:
         val += random.uniform(-50, 30)
         trend_data.append(round(max(0, val), 1))
 
-    # --- Telemetry (simulated real-time) ---
-    telemetry = TelemetryData(
-        tracker_status="Active",
-        gps_precision="2.4m",
-        sync_rate_hz=1.2,
+    # --- Daily Insight (personalized) ---
+    # Count green activities (negative impact = offset)
+    green_result = await db.execute(
+        select(func.count(TransitEvent.id))
+        .where(TransitEvent.user_id == user.id, TransitEvent.impact_kg_co2e < 0)
+    )
+    green_count = green_result.scalar() or 0
+
+    # Total savings
+    savings_result = await db.execute(
+        select(func.sum(func.abs(TransitEvent.impact_kg_co2e)))
+        .where(TransitEvent.user_id == user.id, TransitEvent.impact_kg_co2e < 0)
+    )
+    total_savings = savings_result.scalar() or 0.0
+
+    # Generate insight message based on data
+    insights = [
+        f"Great job! You've made {green_count} eco-friendly trips, saving {total_savings:.1f} kg CO₂. That's like planting {total_savings / 21:.0f} small trees! 🌱",
+        f"You saved {total_savings:.1f} kg CO₂ through green choices! Try biking to work tomorrow for even more impact. 🚴",
+        f"Your green trips have offset {total_savings:.1f} kg of emissions — keep the momentum going this week! 💪",
+    ]
+    message = random.choice(insights) if total_savings > 0 else "Log your first green activity (bike, walk, or bus) to start getting personalized insights! 🌍"
+
+    daily_insight = DailyInsight(
+        message=message,
+        icon="eco" if total_savings > 0 else "lightbulb",
+        streak_days=min(green_count, 14),  # Cap at 14 for display
+        co2_saved_today=round(total_savings * 0.1, 1) if total_savings > 0 else 0,  # Simulated daily portion
     )
 
     # --- Active Budget ---
@@ -89,7 +112,7 @@ async def get_dashboard_data(db: AsyncSession, user: User) -> DashboardResponse:
 
     return DashboardResponse(
         global_impact=GlobalImpact(total_co2e_kg=round(total_co2e, 1), trend_data=trend_data),
-        telemetry=telemetry,
+        daily_insight=daily_insight,
         budget=budget,
         recent_events=recent_events,
     )

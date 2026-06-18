@@ -13,7 +13,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)
     hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
     full_name: Mapped[str] = mapped_column(String(255), nullable=False)
-    role: Mapped[str] = mapped_column(String(50), default="viewer")  # admin | operator | viewer
+    role: Mapped[str] = mapped_column(String(50), default="user")  # user | admin
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
     )
@@ -27,6 +27,3 @@ class User(Base):
     transit_events = relationship("TransitEvent", back_populates="user", cascade="all, delete-orphan")
     wallet = relationship("Wallet", back_populates="user", uselist=False, cascade="all, delete-orphan")
     budgets = relationship("Budget", back_populates="user", cascade="all, delete-orphan")
-    engine_preference = relationship(
-        "EnginePreference", back_populates="user", uselist=False, cascade="all, delete-orphan"
-    )

@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './context/AuthContext.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import ActivityLedger from './pages/ActivityLedger.jsx'
+import Insights from './pages/Insights.jsx'
 import Wallet from './pages/Wallet.jsx'
 import Login from './pages/Login.jsx'
 
@@ -32,6 +33,7 @@ function App() {
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/activity" element={<ProtectedRoute><ActivityLedger /></ProtectedRoute>} />
+        <Route path="/insights" element={<ProtectedRoute><Insights /></ProtectedRoute>} />
         <Route path="/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>

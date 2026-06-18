@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.database import create_tables
-from app.routers import auth, dashboard, activity, wallet
+from app.routers import auth, dashboard, activity, wallet, insights
 
 settings = get_settings()
 
@@ -23,7 +23,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="CarbonTrack API",
-    description="Backend API for the CarbonTrack Enterprise Console — carbon footprint tracking and management.",
+    description="Backend API for CarbonTrack — personal carbon footprint tracking and reduction.",
     version="1.0.0",
     lifespan=lifespan,
 )
@@ -42,6 +42,8 @@ app.include_router(auth.router)
 app.include_router(dashboard.router)
 app.include_router(activity.router)
 app.include_router(wallet.router)
+app.include_router(insights.router)
+
 @app.get("/api/health", tags=["Health"])
 async def health_check():
     """Health check endpoint."""
