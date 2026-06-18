@@ -5,14 +5,6 @@
   min-height: 100vh;
 }
 
-/* Override scaffold root constraints for full-width layout */
-#root:has(.insights-root) {
-  width: 100%;
-  max-width: 100%;
-  border-inline: none;
-  text-align: left;
-}
-
 /* Challenge card hover effect */
 .challenge-card {
   transition: transform 0.2s ease, border-color 0.2s ease;
@@ -69,20 +61,4 @@
   animation: insightGlow 4s ease-in-out infinite;
 }
 
-/* Reset global index.css heading/body styles inside the insights page */
-.insights-root,
-.insights-root h1,
-.insights-root h2,
-.insights-root p {
-  all: revert-layer;
-  font-family: "Inter", system-ui, sans-serif;
-}
 
-.insights-root h1,
-.insights-root h2 {
-  margin: 0;
-  font-size: inherit;
-  font-weight: inherit;
-  color: inherit;
-  letter-spacing: inherit;
-}
