@@ -1,18 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext.jsx'
 import { getInsights } from '../api/insights.js'
+import Layout from '../components/Layout.jsx'
 import './Insights.css'
 
-const navItems = [
-  { icon: 'dashboard', label: 'Dashboard', path: '/dashboard' },
-  { icon: 'history', label: 'Activity Log', path: '/activity' },
-  { icon: 'lightbulb', label: 'Insights', path: '/insights', active: true },
-  { icon: 'emoji_events', label: 'Green Rewards', path: '/wallet' },
-]
-
 export default function Insights() {
-  const { logout } = useAuth()
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -36,61 +27,8 @@ export default function Insights() {
   const equivalences = data?.equivalences || []
 
   return (
-    <div className="insights-root bg-background text-on-background font-sans antialiased min-h-screen flex flex-col md:flex-row overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
-      {/* ── SideNavBar ── */}
-      <nav className="hidden md:flex flex-col h-full py-stack-lg fixed left-0 top-0 w-[280px] bg-surface border-r border-surface-container-highest z-50">
-        {/* Brand Header */}
-        <div className="px-container-padding mb-stack-lg flex items-center gap-3">
-          <div className="w-8 h-8 rounded bg-primary-container flex items-center justify-center text-on-primary-container shrink-0">
-            <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>eco</span>
-          </div>
-          <div>
-            <h1 className="text-headline-md font-bold text-primary tracking-tight">CarbonTrack</h1>
-            <p className="text-label-caps text-on-surface-variant mt-1 uppercase">Personal Tracker</p>
-          </div>
-        </div>
-
-        {/* Primary Navigation */}
-        <div className="flex-1 flex flex-col gap-1 px-3">
-          {navItems.map((item) => (
-            <Link
-              key={item.label}
-              to={item.path}
-              className={
-                item.active
-                  ? 'flex items-center gap-3 px-3 py-2.5 rounded hover:bg-surface-container-low transition-colors text-primary font-bold border-r-2 border-primary bg-surface-container opacity-80 scale-[0.99] transition-all'
-                  : 'flex items-center gap-3 px-3 py-2.5 rounded hover:bg-surface-container-low transition-colors text-on-surface-variant font-medium'
-              }
-            >
-              <span className="material-symbols-outlined">{item.icon}</span>
-              <span className="text-body-sm">{item.label}</span>
-            </Link>
-          ))}
-        </div>
-
-        {/* CTA */}
-        <div className="px-container-padding mt-stack-md mb-stack-lg">
-          <button className="w-full bg-primary-container text-on-primary-container text-body-sm font-semibold py-2.5 rounded shadow-sm hover:brightness-110 transition-all flex items-center justify-center gap-2">
-            <span className="material-symbols-outlined text-[18px]">add</span>
-            Log Activity
-          </button>
-        </div>
-
-        {/* Footer Nav */}
-        <div className="mt-auto flex flex-col gap-1 px-3 border-t border-surface-container-highest pt-stack-md">
-          <a href="#" className="flex items-center gap-3 px-3 py-2 rounded hover:bg-surface-container-low transition-colors text-on-surface-variant">
-            <span className="material-symbols-outlined text-[20px]">settings</span>
-            <span className="text-body-sm">Settings</span>
-          </a>
-          <button onClick={logout} className="flex items-center gap-3 px-3 py-2 rounded hover:bg-surface-container-low transition-colors text-on-surface-variant w-full text-left">
-            <span className="material-symbols-outlined text-[20px]">logout</span>
-            <span className="text-body-sm">Logout</span>
-          </button>
-        </div>
-      </nav>
-
-      {/* ── Main Content Area ── */}
-      <div className="flex-1 flex flex-col md:ml-[280px] min-h-screen relative bg-grid-pattern">
+    <Layout>
+      <div className="flex-1 flex flex-col w-full h-full insights-root bg-grid-pattern relative">
         {/* TopAppBar */}
         <header className="flex items-center justify-between h-14 pr-container-padding pl-container-padding w-full z-40 bg-surface/80 backdrop-blur-md border-b border-surface-container-highest sticky top-0">
           <div className="flex items-center gap-2">
@@ -221,6 +159,6 @@ export default function Insights() {
           )}
         </main>
       </div>
-    </div>
+    </Layout>
   )
 }
