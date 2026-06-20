@@ -15,6 +15,29 @@
 
 ---
 
+## 📑 Table of Contents
+
+- [Description — The "Why"](#-description--the-why)
+- [Prerequisites & Setup](#%EF%B8%8F-prerequisites--setup)
+  - [System Requirements](#system-requirements)
+  - [Step 1: Clone the Repository](#step-1-clone-the-repository)
+  - [Step 2: Backend Setup](#step-2-backend-setup)
+  - [Step 3: Frontend Setup](#step-3-frontend-setup)
+- [Usage](#-usage)
+  - [Getting Started as a New User](#getting-started-as-a-new-user)
+  - [Logging a Carbon Activity](#logging-a-carbon-activity)
+  - [Filtering & Exporting Data](#filtering--exporting-data)
+  - [Exploring Insights & Badges](#exploring-insights--badges)
+  - [Managing Your Green Wallet](#managing-your-green-wallet)
+  - [Customizing Appearance](#customizing-appearance)
+  - [API Endpoints](#api-endpoints)
+- [Project Structure](#%EF%B8%8F-project-structure)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Support & Contact](#-support--contact)
+
+---
+
 ## 📄 Description — The "Why"
 
 Climate change is one of the most pressing challenges facing humanity, yet for most individuals, their personal contribution to carbon emissions remains invisible and abstract. **How much CO₂ did your morning commute produce? How does switching from a meat-based diet to a vegetarian one actually compare?** Without tangible answers, people lack the motivation and the data to make meaningful changes to their daily habits.
@@ -35,29 +58,6 @@ Climate change is one of the most pressing challenges facing humanity, yet for m
 | **Adaptive Theming Engine** | A professionally designed Light & Dark mode system built on semantic CSS variables. Every pixel — including native browser date pickers — adapts flawlessly to the user's preference. |
 | **Smart Date Filtering** | The Activity Ledger date filters automatically prevent future date selection and intelligently handle reversed date ranges. |
 | **One-Click CSV Export** | Download your entire activity history as a CSV file for external analysis, tax records, or sustainability audits. |
-
----
-
-## 📑 Table of Contents
-
-- [Description — The "Why"](#-description--the-why)
-- [Prerequisites & Setup](#-prerequisites--setup)
-  - [System Requirements](#system-requirements)
-  - [Step 1: Clone the Repository](#step-1-clone-the-repository)
-  - [Step 2: Backend Setup](#step-2-backend-setup)
-  - [Step 3: Frontend Setup](#step-3-frontend-setup)
-- [Usage](#-usage)
-  - [Getting Started as a New User](#getting-started-as-a-new-user)
-  - [Logging a Carbon Activity](#logging-a-carbon-activity)
-  - [Filtering & Exporting Data](#filtering--exporting-data)
-  - [Exploring Insights & Badges](#exploring-insights--badges)
-  - [Managing Your Green Wallet](#managing-your-green-wallet)
-  - [Customizing Appearance](#customizing-appearance)
-  - [API Endpoints](#api-endpoints)
-- [Project Structure](#-project-structure)
-- [Contributing](#-contributing)
-- [License](#-license)
-- [Support & Contact](#-support--contact)
 
 ---
 
