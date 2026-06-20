@@ -1,13 +1,19 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { getWallet, getTransactions, getGreenNodes } from '../api/wallet.js'
+import { useDialog } from '../context/DialogContext.jsx'
 import Layout from '../components/Layout.jsx'
 import './Wallet.css'
 
 export default function Wallet() {
   const [wallet, setWallet] = useState({ balance_tco2e: 0, nfc_status: 'Inactive', card_id_last4: '0000' })
-  const [transactions, setTransactions] = useState([])
-  const [greenNodes, setGreenNodes] = useState([])
+  const [rawTransactions, setRawTransactions] = useState([])
+  const [rawGreenNodes, setRawGreenNodes] = useState([])
   const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [chartPeriod, setChartPeriod] = useState('YTD 2024')
+  const navigate = useNavigate()
+  const { showAlert } = useDialog()
 
   useEffect(() => {
     async function fetchData() {
@@ -18,8 +24,8 @@ export default function Wallet() {
           getGreenNodes(),
         ])
         setWallet(w)
-        setTransactions(tx.data)
-        setGreenNodes(nodes)
+        setRawTransactions(tx.data)
+        setRawGreenNodes(nodes)
       } catch (err) {
         console.error('Failed to fetch wallet data:', err)
       } finally {
@@ -31,6 +37,17 @@ export default function Wallet() {
     window.addEventListener('activity-logged', fetchData)
     return () => window.removeEventListener('activity-logged', fetchData)
   }, [])
+
+  const transactions = rawTransactions.filter(tx => 
+    tx.description.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    tx.type.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  const greenNodes = rawGreenNodes.filter(node => 
+    node.name.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  const handleLogActivity = () => window.dispatchEvent(new Event('open-log-activity'))
 
   return (
     <Layout>
@@ -44,13 +61,15 @@ export default function Wallet() {
               className="bg-transparent border-none text-body-sm text-on-surface w-full focus:outline-none focus:ring-0 placeholder-on-surface-variant"
               placeholder="Search resources..."
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
           <div className="flex items-center gap-4">
-            <button className="text-on-surface-variant hover:text-primary transition-colors h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-container-low focus:ring-1 focus:ring-primary">
+            <button onClick={() => showAlert("Notifications", "No new notifications at this time.")} className="text-on-surface-variant hover:text-primary transition-colors h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-container-low focus:ring-1 focus:ring-primary">
               <span className="material-symbols-outlined text-[20px]">notifications</span>
             </button>
-            <button className="text-on-surface-variant hover:text-primary transition-colors h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-container-low focus:ring-1 focus:ring-primary">
+            <button onClick={() => showAlert("Account", "Account settings module coming soon.")} className="text-on-surface-variant hover:text-primary transition-colors h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-container-low focus:ring-1 focus:ring-primary">
               <span className="material-symbols-outlined text-[20px]">account_circle</span>
             </button>
           </div>
@@ -65,8 +84,8 @@ export default function Wallet() {
               <p className="text-body-md text-on-surface-variant">Earn points for eco-friendly choices and track your green achievements.</p>
             </div>
             <div className="flex items-center gap-stack-sm">
-              <button className="bg-transparent border border-surface-container-highest text-on-surface text-body-sm py-2 px-4 rounded hover:bg-surface-container-low transition-colors">View History</button>
-              <button className="bg-primary-container text-[#020617] text-body-sm font-bold py-2 px-4 rounded hover:bg-primary-fixed transition-colors">Log Activity</button>
+              <button onClick={() => navigate('/activity')} className="bg-transparent border border-surface-container-highest text-on-surface text-body-sm py-2 px-4 rounded hover:bg-surface-container-low transition-colors">View History</button>
+              <button onClick={handleLogActivity} className="bg-primary-container text-[#020617] text-body-sm font-bold py-2 px-4 rounded hover:bg-primary-fixed transition-colors">Log Activity</button>
             </div>
           </div>
 
@@ -108,7 +127,7 @@ export default function Wallet() {
             <div className="col-span-1 md:col-span-8 bg-[#0f172a] rounded-xl border border-[#334155] p-stack-md flex flex-col">
               <div className="flex justify-between items-center mb-stack-md">
                 <h2 className="text-headline-sm text-on-surface">Weekly Progress</h2>
-                <select className="bg-surface border border-surface-container-highest text-body-sm text-on-surface rounded px-2 py-1 focus:ring-1 focus:ring-primary focus:border-primary outline-none">
+                <select value={chartPeriod} onChange={(e) => setChartPeriod(e.target.value)} className="bg-surface border border-surface-container-highest text-body-sm text-on-surface rounded px-2 py-1 focus:ring-1 focus:ring-primary focus:border-primary outline-none">
                   <option>YTD 2024</option>
                   <option>Q4 2023</option>
                   <option>Q3 2023</option>
@@ -144,7 +163,7 @@ export default function Wallet() {
             <div className="col-span-1 md:col-span-8 bg-[#0f172a] rounded-xl border border-[#334155] overflow-hidden flex flex-col">
               <div className="p-stack-md border-b border-[#1e293b] flex justify-between items-center bg-surface-container-lowest">
                   <h2 className="text-headline-sm text-on-surface">Rewards History</h2>
-                <button className="text-body-sm text-primary hover:underline">View All</button>
+                <button onClick={() => navigate('/activity')} className="text-body-sm text-primary hover:underline">View All</button>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">

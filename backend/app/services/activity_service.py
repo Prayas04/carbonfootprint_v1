@@ -57,9 +57,11 @@ async def get_metrics(db: AsyncSession, user: User) -> MetricsResponse:
     )
     total_emissions = total_result.scalar() or 0.0
 
-    # Total distance
+    # Total distance (only for transit modes)
     dist_result = await db.execute(
-        select(func.sum(TransitEvent.distance_km)).where(user_filter)
+        select(func.sum(TransitEvent.distance_km)).where(
+            and_(user_filter, TransitEvent.mode.in_(["Walk", "Bike", "Transit", "Carpool", "Car", "Flight"]))
+        )
     )
     total_distance = dist_result.scalar() or 0.0
 
@@ -159,6 +161,20 @@ async def get_events(
 
     data = []
     for e in events:
+        is_transit = e.mode in ["Walk", "Bike", "Transit", "Carpool", "Car", "Flight"]
+        
+        # Format distance appropriately based on mode
+        if is_transit:
+            dist_str = f"{e.distance_km} km"
+        elif e.mode in ["Vegan", "Vegetarian", "Pescatarian", "Meat"]:
+            dist_str = f"{int(e.distance_km)} meals"
+        elif e.mode in ["Electricity", "Heating"]:
+            dist_str = f"{e.distance_km} kWh"
+        elif e.mode in ["Clothing", "Electronics"]:
+            dist_str = f"{int(e.distance_km)} items"
+        else:
+            dist_str = f"{e.distance_km}"
+
         data.append(
             TransitEventResponse(
                 id=e.id,
@@ -167,8 +183,8 @@ async def get_events(
                 mode=e.mode,
                 origin=e.origin,
                 destination=e.destination,
-                distance=f"{e.distance_km} km",
-                duration=_format_duration(e.duration_minutes),
+                distance=dist_str,
+                duration=_format_duration(e.duration_minutes) if is_transit else "-",
                 impact=e.impact_kg_co2e,
                 impact_color=_impact_color(abs(e.impact_kg_co2e)),
                 bar_color=_bar_color(abs(e.impact_kg_co2e)),

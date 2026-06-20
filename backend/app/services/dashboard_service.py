@@ -99,12 +99,26 @@ async def get_dashboard_data(db: AsyncSession, user: User) -> DashboardResponse:
 
     recent_events = []
     for e in events:
+        is_transit = e.mode in ["Walk", "Bike", "Transit", "Carpool", "Car", "Flight"]
+        
+        # Format distance appropriately based on mode
+        if is_transit:
+            dist_str = f"{e.distance_km} km"
+        elif e.mode in ["Vegan", "Vegetarian", "Pescatarian", "Meat"]:
+            dist_str = f"{int(e.distance_km)} meals"
+        elif e.mode in ["Electricity", "Heating"]:
+            dist_str = f"{e.distance_km} kWh"
+        elif e.mode in ["Clothing", "Electronics"]:
+            dist_str = f"{int(e.distance_km)} items"
+        else:
+            dist_str = f"{e.distance_km}"
+
         recent_events.append(
             RecentEvent(
                 icon=e.mode_icon,
                 mode=e.mode,
-                distance=f"{e.distance_km} km",
-                duration=_format_duration(e.duration_minutes),
+                distance=dist_str,
+                duration=_format_duration(e.duration_minutes) if is_transit else "-",
                 impact_kg=e.impact_kg_co2e,
                 positive=e.impact_kg_co2e < 0,  # Negative = offset = positive impact
             )

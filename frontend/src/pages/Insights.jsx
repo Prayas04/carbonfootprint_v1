@@ -1,17 +1,23 @@
 import { useState, useEffect } from 'react'
 import { getInsights } from '../api/insights.js'
+import { useDialog } from '../context/DialogContext.jsx'
 import Layout from '../components/Layout.jsx'
 import './Insights.css'
 
 export default function Insights() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [localChallenges, setLocalChallenges] = useState([])
+  const { showAlert, showConfirm } = useDialog()
 
   useEffect(() => {
     async function fetchData() {
       try {
         const result = await getInsights()
         setData(result)
+        if (result.challenges) {
+          setLocalChallenges(result.challenges.map(c => ({...c, status: 'unstarted'})))
+        }
       } catch (err) {
         console.error('Failed to fetch insights:', err)
       } finally {
@@ -22,9 +28,26 @@ export default function Insights() {
   }, [])
 
   const today = data?.today_insight || { title: 'Loading...', description: '', icon: 'lightbulb', type: 'tip' }
-  const challenges = data?.challenges || []
+  const challenges = localChallenges
   const achievements = data?.achievements || []
   const equivalences = data?.equivalences || []
+
+  const handleChallengeClick = (index) => {
+    const challenge = localChallenges[index];
+    if (challenge.status === 'unstarted') {
+      showConfirm("Start Challenge", `Do you want to start the challenge: "${challenge.title}"?`, () => {
+        const newChallenges = [...localChallenges];
+        newChallenges[index].status = 'in_progress';
+        setLocalChallenges(newChallenges);
+      })
+    } else if (challenge.status === 'in_progress') {
+      showConfirm("Complete Challenge", `Mark challenge "${challenge.title}" as completed?`, () => {
+        const newChallenges = [...localChallenges];
+        newChallenges[index].status = 'completed';
+        setLocalChallenges(newChallenges);
+      })
+    }
+  }
 
   return (
     <Layout>
@@ -40,10 +63,10 @@ export default function Insights() {
             </span>
           </div>
           <div className="flex items-center gap-4">
-            <button className="text-on-surface-variant hover:text-primary transition-colors h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-container-low focus:ring-1 focus:ring-primary">
+            <button onClick={() => showAlert("Notifications", "No new notifications at this time.")} className="text-on-surface-variant hover:text-primary transition-colors h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-container-low focus:ring-1 focus:ring-primary">
               <span className="material-symbols-outlined text-[20px]">notifications</span>
             </button>
-            <button className="text-on-surface-variant hover:text-primary transition-colors h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-container-low focus:ring-1 focus:ring-primary">
+            <button onClick={() => showAlert("Account", "Account settings module coming soon.")} className="text-on-surface-variant hover:text-primary transition-colors h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-container-low focus:ring-1 focus:ring-primary">
               <span className="material-symbols-outlined text-[20px]">account_circle</span>
             </button>
           </div>
@@ -94,12 +117,18 @@ export default function Insights() {
                 </div>
                 <div className="flex flex-col gap-3">
                   {challenges.map((challenge, i) => (
-                    <div key={i} className="challenge-card bg-[#0f172a] rounded-lg border border-[#334155] p-5 flex items-start gap-4 cursor-pointer">
+                    <div key={i} onClick={() => handleChallengeClick(i)} className={`challenge-card bg-[#0f172a] rounded-lg border border-[#334155] p-5 flex items-start gap-4 cursor-pointer hover:bg-[#1e293b] transition-colors ${challenge.status === 'completed' ? 'opacity-50' : ''}`}>
                       <div className="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-on-surface shrink-0">
-                        <span className="material-symbols-outlined text-[20px]">{challenge.icon}</span>
+                        <span className="material-symbols-outlined text-[20px]">
+                          {challenge.status === 'completed' ? 'check_circle' : challenge.icon}
+                        </span>
                       </div>
                       <div className="flex-1">
-                        <h4 className="text-body-sm font-medium text-on-surface mb-1">{challenge.title}</h4>
+                        <h4 className="text-body-sm font-medium text-on-surface mb-1">
+                          {challenge.title}
+                          {challenge.status === 'in_progress' && <span className="ml-2 text-[10px] font-mono bg-secondary/20 text-secondary px-1.5 py-0.5 rounded">IN PROGRESS</span>}
+                          {challenge.status === 'completed' && <span className="ml-2 text-[10px] font-mono bg-surface-container-highest text-on-surface-variant px-1.5 py-0.5 rounded">DONE</span>}
+                        </h4>
                         <p className="text-[12px] text-on-surface-variant leading-relaxed">{challenge.description}</p>
                       </div>
                       {challenge.impact_kg && (

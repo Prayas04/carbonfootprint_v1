@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { getDashboard } from '../api/dashboard.js'
+import { useDialog } from '../context/DialogContext.jsx'
 import Layout from '../components/Layout.jsx'
 import './Dashboard.css'
 
@@ -8,6 +9,9 @@ export default function Dashboard() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [localGoal, setLocalGoal] = useState(null)
+  const { showAlert, showPrompt } = useDialog()
 
   useEffect(() => {
     async function fetchData() {
@@ -29,7 +33,27 @@ export default function Dashboard() {
   const globalImpact = data?.global_impact || { total_co2e_kg: 0, trend_data: [] }
   const dailyInsight = data?.daily_insight || { message: 'Start logging activities to get personalized insights!', icon: 'lightbulb', streak_days: 0, co2_saved_today: 0 }
   const budget = data?.budget || { cycle_name: '—', total_kg: 0, used_kg: 0, remaining_kg: 0, percent_used: 0 }
-  const recentEvents = data?.recent_events || []
+  
+  const displayBudget = { ...budget }
+  if (localGoal !== null) {
+    displayBudget.total_kg = localGoal
+    displayBudget.remaining_kg = Math.max(0, localGoal - displayBudget.used_kg)
+    displayBudget.percent_used = localGoal > 0 ? Math.min(100, Math.round((displayBudget.used_kg / localGoal) * 100)) : 0
+  }
+
+  const rawEvents = data?.recent_events || []
+  const recentEvents = rawEvents.filter(e => 
+    e.mode.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    e.distance.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  const handleAdjustGoal = () => {
+    showPrompt("Adjust Goal", "Enter your new monthly carbon goal in kg CO2e:", displayBudget.total_kg, (newGoal) => {
+      if (newGoal !== null && !isNaN(newGoal) && newGoal.toString().trim() !== '') {
+        setLocalGoal(parseFloat(newGoal))
+      }
+    })
+  }
 
   return (
     <Layout>
@@ -43,14 +67,16 @@ export default function Dashboard() {
                 className="w-full bg-surface-container-lowest text-body-sm text-on-surface placeholder:text-on-surface-variant border border-surface-container-highest rounded-md pl-10 pr-4 py-1.5 focus:outline-none focus:border-primary-container bg-transparent"
                 placeholder="Search metrics..."
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <button className="text-on-surface-variant hover:text-primary transition-colors h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-container-low focus:ring-1 focus:ring-primary">
+            <button onClick={() => showAlert("Notifications", "No new notifications at this time.")} className="text-on-surface-variant hover:text-primary transition-colors h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-container-low focus:ring-1 focus:ring-primary">
               <span className="material-symbols-outlined text-[20px]">notifications</span>
             </button>
-            <button className="text-on-surface-variant hover:text-primary transition-colors h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-container-low focus:ring-1 focus:ring-primary">
+            <button onClick={() => showAlert("Account", "Account settings module coming soon.")} className="text-on-surface-variant hover:text-primary transition-colors h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-container-low focus:ring-1 focus:ring-primary">
               <span className="material-symbols-outlined text-[20px]">account_circle</span>
             </button>
           </div>
@@ -146,19 +172,19 @@ export default function Dashboard() {
                 <div className="mb-4 flex-1">
                   <div className="flex justify-between items-end mb-2">
                     <span className="text-headline-md text-on-surface">
-                      {budget.used_kg.toLocaleString()}<span className="text-body-sm text-on-surface-variant ml-1">kg used</span>
+                      {displayBudget.used_kg.toLocaleString()}<span className="text-body-sm text-on-surface-variant ml-1">kg used</span>
                     </span>
-                    <span className="text-body-md text-on-surface-variant">/ {budget.total_kg.toLocaleString()} kg goal</span>
+                    <span className="text-body-md text-on-surface-variant">/ {displayBudget.total_kg.toLocaleString()} kg goal</span>
                   </div>
                   <div className="h-2 w-full bg-surface-container-high rounded-full overflow-hidden mb-2">
-                    <div className="h-full bg-secondary-container rounded-full progress-bar-fill" style={{ width: `${budget.percent_used}%` }}></div>
+                    <div className="h-full bg-secondary-container rounded-full progress-bar-fill" style={{ width: `${displayBudget.percent_used}%` }}></div>
                   </div>
                   <div className="flex justify-between text-data-sm font-mono text-on-surface-variant">
-                    <span>{budget.percent_used}% of goal</span>
-                    <span>{budget.remaining_kg.toLocaleString()} kg left</span>
+                    <span>{displayBudget.percent_used}% of goal</span>
+                    <span>{displayBudget.remaining_kg.toLocaleString()} kg left</span>
                   </div>
                 </div>
-                <button className="w-full mt-auto py-2 border border-surface-container-highest rounded text-body-sm text-on-surface hover:bg-surface-container-high transition-colors">
+                <button onClick={handleAdjustGoal} className="w-full mt-auto py-2 border border-surface-container-highest rounded text-body-sm text-on-surface hover:bg-surface-container-high transition-colors">
                   Adjust My Goal
                 </button>
               </div>

@@ -1,7 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { getMetrics, getEvents } from '../api/activity.js'
+import { useDialog } from '../context/DialogContext.jsx'
 import Layout from '../components/Layout.jsx'
 import './ActivityLedger.css'
+
+const CATEGORY_MODES = [
+  { label: 'Transit', options: [{val: 'Walk', text: '🚶 Walk'}, {val: 'Bike', text: '🚴 Bike'}, {val: 'Transit', text: '🚌 Transit'}, {val: 'Carpool', text: '🚕 Carpool'}, {val: 'Car', text: '🚗 Car'}, {val: 'Flight', text: '✈️ Flight'}] },
+  { label: 'Diet', options: [{val: 'Vegan', text: '🌱 Vegan'}, {val: 'Vegetarian', text: '🥗 Vegetarian'}, {val: 'Pescatarian', text: '🐟 Pescatarian'}, {val: 'Meat', text: '🥩 Meat'}] },
+  { label: 'Energy', options: [{val: 'Electricity', text: '⚡ Electricity'}, {val: 'Heating', text: '🔥 Heating'}] },
+  { label: 'Shopping', options: [{val: 'Clothing', text: '👕 Clothing'}, {val: 'Electronics', text: '💻 Electronics'}] }
+];
 
 export default function ActivityLedger() {
   const [metrics, setMetrics] = useState([])
@@ -11,6 +19,27 @@ export default function ActivityLedger() {
   const [currentPage, setCurrentPage] = useState(1)
   const [modeFilter, setModeFilter] = useState('')
   const [expandedRowId, setExpandedRowId] = useState(null)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [impactThreshold, setImpactThreshold] = useState(0)
+  const [startDate, setStartDate] = useState(() => {
+    const d = new Date()
+    d.setDate(d.getDate() - 7)
+    return d.toISOString().split('T')[0]
+  })
+  const [endDate, setEndDate] = useState(() => new Date().toISOString().split('T')[0])
+  const dropdownRef = useRef(null)
+  const { showAlert } = useDialog()
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const fetchData = useCallback(async () => {
     setLoading(true)
@@ -39,6 +68,43 @@ export default function ActivityLedger() {
   const pageNumbers = []
   for (let i = 1; i <= Math.min(totalPages, 5); i++) pageNumbers.push(i)
 
+  const getSelectedText = () => {
+    if (!modeFilter) return "All Activities";
+    for (const cat of CATEGORY_MODES) {
+      const opt = cat.options.find(o => o.val === modeFilter);
+      if (opt) return opt.text;
+    }
+    return modeFilter;
+  };
+
+  const handleExportCSV = () => {
+    if (rows.length === 0) return showAlert('Export Failed', 'No data to export.')
+    const headers = ['Timestamp', 'Mode', 'Origin', 'Destination', 'Distance', 'Duration', 'Impact_kgCO2e']
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(r => [
+        `"${r.timestamp}"`, `"${r.mode}"`, `"${r.origin}"`, `"${r.destination}"`, `"${r.distance}"`, `"${r.duration}"`, r.impact
+      ].join(','))
+    ].join('\n')
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', 'carbon_activities.csv')
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
+  const filteredRows = rows.filter(r => {
+    const matchesSearch = r.mode.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          r.origin.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          r.destination.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesImpact = parseFloat(r.impact) >= impactThreshold
+    return matchesSearch && matchesImpact
+  })
+
   return (
     <Layout>
       <div className="activity-ledger-root flex-1 flex flex-col bg-background text-on-background font-sans antialiased overflow-hidden">
@@ -50,13 +116,15 @@ export default function ActivityLedger() {
             className="bg-transparent border-none text-body-sm text-on-surface w-full focus:outline-none focus:ring-0 placeholder-on-surface-variant"
             placeholder="Search resources..."
             type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
         <div className="flex items-center gap-4">
-          <button className="text-on-surface-variant hover:text-primary transition-colors h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-container-low focus:ring-1 focus:ring-primary">
+          <button onClick={() => showAlert("Notifications", "No new notifications at this time.")} className="text-on-surface-variant hover:text-primary transition-colors h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-container-low focus:ring-1 focus:ring-primary">
             <span className="material-symbols-outlined text-[20px]">notifications</span>
           </button>
-          <button className="text-on-surface-variant hover:text-primary transition-colors h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-container-low focus:ring-1 focus:ring-primary">
+          <button onClick={() => showAlert("Account", "Account settings module coming soon.")} className="text-on-surface-variant hover:text-primary transition-colors h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-container-low focus:ring-1 focus:ring-primary">
             <span className="material-symbols-outlined text-[20px]">account_circle</span>
           </button>
         </div>
@@ -71,7 +139,7 @@ export default function ActivityLedger() {
             <p className="text-body-sm text-on-surface-variant">Track your daily activities and their carbon impact.</p>
           </div>
           <div className="flex items-center gap-3">
-            <button className="bg-transparent border border-surface-container-highest text-on-surface text-body-sm px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors flex items-center gap-2">
+            <button onClick={handleExportCSV} className="bg-transparent border border-surface-container-highest text-on-surface text-body-sm px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors flex items-center gap-2">
               <span className="material-symbols-outlined text-[18px]">download</span>
               Export PDF/CSV
             </button>
@@ -105,34 +173,73 @@ export default function ActivityLedger() {
             <span className="text-label-caps text-on-surface-variant">Filters</span>
           </div>
           {/* Date Range */}
-          <div className="flex items-center gap-2 bg-background border border-surface-container-highest rounded px-3 py-1.5">
+          <div className="flex items-center gap-2 bg-background border border-surface-container-highest rounded px-3 py-1.5 focus-within:border-primary">
             <span className="material-symbols-outlined text-on-surface-variant text-[16px]">calendar_today</span>
-            <span className="text-data-sm font-mono text-on-surface">Oct 01 - Oct 07, 2023</span>
+            <input 
+              type="date" 
+              className="bg-transparent text-data-sm font-mono text-on-surface focus:outline-none border-none outline-none appearance-none" 
+              value={startDate} 
+              onChange={e => setStartDate(e.target.value)}
+            />
+            <span className="text-on-surface-variant text-data-sm">-</span>
+            <input 
+              type="date" 
+              className="bg-transparent text-data-sm font-mono text-on-surface focus:outline-none border-none outline-none appearance-none" 
+              value={endDate} 
+              onChange={e => setEndDate(e.target.value)}
+            />
           </div>
-          {/* Mode Filter */}
-          <select
-            className="bg-background border border-surface-container-highest rounded px-3 py-1.5 text-data-sm font-mono text-on-surface cursor-pointer hover:border-outline transition-colors focus:outline-none focus:ring-1 focus:ring-primary"
-            value={modeFilter}
-            onChange={(e) => { setModeFilter(e.target.value); setCurrentPage(1); }}
-          >
-            <option value="">All Activities</option>
-            <option value="Car">🚗 Car</option>
-            <option value="Bus">🚌 Bus</option>
-            <option value="Train">🚆 Train</option>
-            <option value="Bike">🚴 Bike</option>
-            <option value="Walk">🚶 Walk</option>
-            <option value="Flight">✈️ Flight</option>
-            <option value="Diet">🍽️ Diet</option>
-            <option value="Home Energy">⚡ Home Energy</option>
-          </select>
+          {/* Mode Filter (Custom Dropdown) */}
+          <div className="relative" ref={dropdownRef}>
+            <button 
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="bg-background border border-surface-container-highest rounded px-3 py-1.5 text-data-sm font-mono text-on-surface cursor-pointer hover:border-outline transition-colors flex items-center justify-between min-w-[160px]"
+            >
+              <span>{getSelectedText()}</span>
+              <span className="material-symbols-outlined text-[16px] ml-2">expand_more</span>
+            </button>
+            
+            {isDropdownOpen && (
+              <div className="absolute top-full left-0 mt-1 w-48 bg-surface-container-high border border-surface-container-highest rounded-lg shadow-xl z-50 max-h-64 overflow-y-auto">
+                <button 
+                  className={`w-full text-left px-4 py-2 text-data-sm font-mono hover:bg-surface-container-highest transition-colors ${modeFilter === '' ? 'text-primary' : 'text-on-surface'}`}
+                  onClick={() => { setModeFilter(''); setCurrentPage(1); setIsDropdownOpen(false); }}
+                >
+                  All Activities
+                </button>
+                {CATEGORY_MODES.map((cat) => (
+                  <div key={cat.label}>
+                    <div className="px-4 py-1.5 bg-surface-container/50 text-label-caps text-on-surface-variant uppercase mt-1">
+                      {cat.label}
+                    </div>
+                    {cat.options.map(opt => (
+                      <button
+                        key={opt.val}
+                        className={`w-full text-left px-4 py-2 text-data-sm font-mono hover:bg-surface-container-highest transition-colors ${modeFilter === opt.val ? 'text-primary bg-surface-container' : 'text-on-surface'}`}
+                        onClick={() => { setModeFilter(opt.val); setCurrentPage(1); setIsDropdownOpen(false); }}
+                      >
+                        {opt.text}
+                      </button>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
           {/* Impact Threshold */}
           <div className="flex items-center gap-3 ml-auto text-data-sm font-mono text-on-surface-variant">
             <span>Impact &gt;</span>
-            <input
-              className="w-16 bg-background border border-surface-container-highest rounded px-2 py-1 text-center focus:outline-none focus:border-primary text-on-surface"
-              type="text"
-              defaultValue="0 kg"
-            />
+            <div className="relative">
+              <input
+                className="w-20 bg-background border border-surface-container-highest rounded px-2 py-1 text-center focus:outline-none focus:border-primary text-on-surface"
+                type="number"
+                min="0"
+                step="0.1"
+                value={impactThreshold}
+                onChange={(e) => setImpactThreshold(parseFloat(e.target.value) || 0)}
+              />
+              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-data-sm pointer-events-none text-on-surface-variant">kg</span>
+            </div>
           </div>
         </div>
 
@@ -158,7 +265,7 @@ export default function ActivityLedger() {
                 </tr>
               </thead>
                   <tbody className="text-data-sm font-mono text-on-surface">
-                {rows.map((row, i) => (
+                {filteredRows.map((row, i) => (
                   <React.Fragment key={row.id || i}>
                     <tr 
                       className={`border-b border-surface-container-highest hover:bg-surface-container-low transition-colors group cursor-pointer ${expandedRowId === row.id ? 'bg-surface-container-low' : ''}`}
@@ -174,9 +281,13 @@ export default function ActivityLedger() {
                         </div>
                       </td>
                       <td className="py-3 px-4">
-                        <div className="w-16 h-8 bg-surface-container-highest rounded border border-surface-container-highest overflow-hidden relative flex items-center justify-center hover:bg-primary-container hover:text-[#020617] transition-colors">
-                          <span className="material-symbols-outlined text-[16px]">map</span>
-                        </div>
+                        {row.origin !== 'N/A' && row.destination !== 'N/A' ? (
+                          <div className="w-16 h-8 bg-surface-container-highest rounded border border-surface-container-highest overflow-hidden relative flex items-center justify-center hover:bg-primary-container hover:text-[#020617] transition-colors">
+                            <span className="material-symbols-outlined text-[16px]">map</span>
+                          </div>
+                        ) : (
+                          <span className="text-on-surface-variant opacity-50">-</span>
+                        )}
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex flex-col gap-0.5">
@@ -195,7 +306,7 @@ export default function ActivityLedger() {
                         </div>
                       </td>
                     </tr>
-                    {expandedRowId === row.id && row.origin && row.destination && (
+                    {expandedRowId === row.id && row.origin !== 'N/A' && row.destination !== 'N/A' && (
                       <tr className="bg-surface-container-lowest border-b border-surface-container-highest">
                         <td colSpan="7" className="p-4">
                           <div className="w-full h-64 rounded-xl overflow-hidden border border-surface-container-highest relative">

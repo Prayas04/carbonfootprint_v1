@@ -100,3 +100,29 @@
   --text-data-sm--letter-spacing: 0.02em;
   --text-data-sm--font-weight: 500;
 }
+
+/* Custom Scrollbar Styles */
+@layer base {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-surface-container-lowest);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-surface-container-highest);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-outline-variant);
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-surface-container-highest) var(--color-surface-container-lowest);
+  }
+}

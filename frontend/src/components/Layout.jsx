@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import LogActivityModal from './LogActivityModal.jsx'
@@ -14,6 +14,12 @@ export default function Layout({ children }) {
   const { logout } = useAuth()
   const location = useLocation()
   const [isLogModalOpen, setIsLogModalOpen] = useState(false)
+
+  useEffect(() => {
+    const handleOpenModal = () => setIsLogModalOpen(true)
+    window.addEventListener('open-log-activity', handleOpenModal)
+    return () => window.removeEventListener('open-log-activity', handleOpenModal)
+  }, [])
 
   const handleActivityLogged = () => {
     setIsLogModalOpen(false)
