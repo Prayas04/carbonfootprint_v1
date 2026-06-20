@@ -124,12 +124,6 @@ export default function Login() {
           >
             {isRegister ? 'Already have an account? Sign In' : "Don't have an account? Register"}
           </button>
-
-          {!isRegister && (
-            <p className="login-demo-hint">
-              Demo: demo@carbontrack.io / password123
-            </p>
-          )}
         </div>
       </div>
     </div>
