@@ -83,7 +83,7 @@ export default function Insights() {
           <div className="flex flex-col gap-stack-lg">
 
             {/* ── Today's Insight — Hero Card ── */}
-            <div className="bg-[#0f172a] rounded-xl border border-[#334155] p-8 relative overflow-hidden">
+            <div className="bg-surface-container rounded-xl border border-surface-container-highest p-8 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-secondary/5 rounded-bl-[200px] insight-hero-glow"></div>
               <div className="absolute bottom-0 left-0 w-32 h-32 bg-primary-container/5 rounded-tr-[100px]"></div>
               <div className="relative z-10">
@@ -117,7 +117,7 @@ export default function Insights() {
                 </div>
                 <div className="flex flex-col gap-3">
                   {challenges.map((challenge, i) => (
-                    <div key={i} onClick={() => handleChallengeClick(i)} className={`challenge-card bg-[#0f172a] rounded-lg border border-[#334155] p-5 flex items-start gap-4 cursor-pointer hover:bg-[#1e293b] transition-colors ${challenge.status === 'completed' ? 'opacity-50' : ''}`}>
+                    <div key={i} onClick={() => handleChallengeClick(i)} className={`challenge-card bg-surface-container rounded-lg border border-surface-container-highest p-5 flex items-start gap-4 cursor-pointer hover:bg-surface-container-high transition-colors ${challenge.status === 'completed' ? 'opacity-50' : ''}`}>
                       <div className="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-on-surface shrink-0">
                         <span className="material-symbols-outlined text-[20px]">
                           {challenge.status === 'completed' ? 'check_circle' : challenge.icon}
@@ -149,7 +149,7 @@ export default function Insights() {
                 </div>
                 <div className="flex flex-col gap-3">
                   {achievements.map((achievement, i) => (
-                    <div key={i} className="achievement-badge bg-[#0f172a] rounded-lg border border-[#334155] p-5 flex items-start gap-4">
+                    <div key={i} className="achievement-badge bg-surface-container rounded-lg border border-surface-container-highest p-5 flex items-start gap-4">
                       <div className="w-10 h-10 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary-container shrink-0">
                         <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>{achievement.icon}</span>
                       </div>
@@ -172,7 +172,7 @@ export default function Insights() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {equivalences.map((eq, i) => (
-                    <div key={i} className="equivalence-card bg-[#0f172a] rounded-lg border border-[#334155] p-5 flex flex-col text-center">
+                    <div key={i} className="equivalence-card bg-surface-container rounded-lg border border-surface-container-highest p-5 flex flex-col text-center">
                       <div className="w-12 h-12 mx-auto rounded-lg bg-surface-container-highest flex items-center justify-center text-on-surface mb-3">
                         <span className="material-symbols-outlined text-[24px]">{eq.icon}</span>
                       </div>

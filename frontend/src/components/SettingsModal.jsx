@@ -83,7 +83,7 @@ export default function SettingsModal() {
                       <span
                         className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full flex items-center justify-center transition-transform ${isDarkMode ? 'translate-x-6 bg-primary' : 'translate-x-0 bg-surface'}`}
                       >
-                        <span className={`material-symbols-outlined text-[14px] ${isDarkMode ? 'text-[#020617]' : 'text-on-surface-variant'}`}>
+                        <span className={`material-symbols-outlined text-[14px] ${isDarkMode ? 'text-on-primary-container' : 'text-on-surface-variant'}`}>
                           {isDarkMode ? 'dark_mode' : 'light_mode'}
                         </span>
                       </span>

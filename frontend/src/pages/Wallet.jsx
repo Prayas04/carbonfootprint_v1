@@ -85,7 +85,7 @@ export default function Wallet() {
             </div>
             <div className="flex items-center gap-stack-sm">
               <button onClick={() => navigate('/activity')} className="bg-transparent border border-surface-container-highest text-on-surface text-body-sm py-2 px-4 rounded hover:bg-surface-container-low transition-colors">View History</button>
-              <button onClick={handleLogActivity} className="bg-primary-container text-[#020617] text-body-sm font-bold py-2 px-4 rounded hover:bg-primary-fixed transition-colors">Log Activity</button>
+              <button onClick={handleLogActivity} className="bg-primary-container text-on-primary-container text-body-sm font-bold py-2 px-4 rounded hover:bg-primary-fixed transition-colors">Log Activity</button>
             </div>
           </div>
 
@@ -100,7 +100,7 @@ export default function Wallet() {
 
             {/* ── Virtual Carbon Card (4 cols) ── */}
             <div className="col-span-1 md:col-span-4 bg-surface-container-low rounded-xl border border-surface-container-highest p-stack-md relative overflow-hidden flex flex-col justify-between min-h-[240px]">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#bef264]/10 to-transparent pointer-events-none"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-primary-container/10 to-transparent pointer-events-none"></div>
               <div className="flex justify-between items-start relative z-10">
                 <div className="text-on-surface-variant text-label-caps">EcoPoints Balance</div>
                 <span className="material-symbols-outlined text-primary">emoji_events</span>
@@ -124,7 +124,7 @@ export default function Wallet() {
             </div>
 
             {/* ── Burn Rate Analytics (8 cols) ── */}
-            <div className="col-span-1 md:col-span-8 bg-[#0f172a] rounded-xl border border-[#334155] p-stack-md flex flex-col">
+            <div className="col-span-1 md:col-span-8 bg-surface-container rounded-xl border border-surface-container-highest p-stack-md flex flex-col">
               <div className="flex justify-between items-center mb-stack-md">
                 <h2 className="text-headline-sm text-on-surface">Weekly Progress</h2>
                 <select value={chartPeriod} onChange={(e) => setChartPeriod(e.target.value)} className="bg-surface border border-surface-container-highest text-body-sm text-on-surface rounded px-2 py-1 focus:ring-1 focus:ring-primary focus:border-primary outline-none">
@@ -140,13 +140,13 @@ export default function Wallet() {
                 <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 100">
                   <defs>
                     <linearGradient id="walletChartGradient" x1="0" x2="0" y1="0" y2="1">
-                      <stop offset="0%" stopColor="#bef264" stopOpacity="0.3" />
-                      <stop offset="100%" stopColor="#bef264" stopOpacity="0" />
+                      <stop offset="0%" stopColor="var(--color-primary-container)" stopOpacity="0.3" />
+                      <stop offset="100%" stopColor="var(--color-primary-container)" stopOpacity="0" />
                     </linearGradient>
                   </defs>
                   <path d="M0,100 L0,60 C20,55 30,70 50,40 C70,10 80,30 100,20 L100,100 Z" fill="url(#walletChartGradient)" />
-                  <path d="M0,60 C20,55 30,70 50,40 C70,10 80,30 100,20" fill="none" stroke="#bef264" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
-                  <path d="M0,50 L100,50" fill="none" stroke="#64748b" strokeDasharray="2 2" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+                  <path d="M0,60 C20,55 30,70 50,40 C70,10 80,30 100,20" fill="none" stroke="var(--color-primary-container)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
+                  <path d="M0,50 L100,50" fill="none" stroke="var(--color-outline)" strokeDasharray="2 2" strokeWidth="1" vectorEffect="non-scaling-stroke" />
                 </svg>
                 {/* X-axis Labels */}
                 <div className="absolute bottom-[-15px] w-full flex justify-between text-label-caps text-on-surface-variant px-1">
@@ -160,8 +160,8 @@ export default function Wallet() {
             </div>
 
             {/* ── Transaction Ledger (8 cols) ── */}
-            <div className="col-span-1 md:col-span-8 bg-[#0f172a] rounded-xl border border-[#334155] overflow-hidden flex flex-col">
-              <div className="p-stack-md border-b border-[#1e293b] flex justify-between items-center bg-surface-container-lowest">
+            <div className="col-span-1 md:col-span-8 bg-surface-container rounded-xl border border-surface-container-highest overflow-hidden flex flex-col">
+              <div className="p-stack-md border-b border-surface-container-high flex justify-between items-center bg-surface-container-lowest">
                   <h2 className="text-headline-sm text-on-surface">Rewards History</h2>
                 <button onClick={() => navigate('/activity')} className="text-body-sm text-primary hover:underline">View All</button>
               </div>
@@ -177,7 +177,7 @@ export default function Wallet() {
                   </thead>
                   <tbody className="text-body-sm">
                     {transactions.map((tx, i) => (
-                      <tr key={tx.id || i} className={`${i < transactions.length - 1 ? 'border-b border-[#1e293b]' : ''} hover:bg-[#1e293b] transition-colors group cursor-pointer`}>
+                      <tr key={tx.id || i} className={`${i < transactions.length - 1 ? 'border-b border-surface-container-high' : ''} hover:bg-surface-container-high transition-colors group cursor-pointer`}>
                         <td className="p-stack-sm text-on-surface-variant font-mono text-data-sm">{tx.date}</td>
                         <td className="p-stack-sm text-on-surface">{tx.description}</td>
                         <td className="p-stack-sm">
@@ -192,8 +192,8 @@ export default function Wallet() {
             </div>
 
             {/* ── Geofenced Green Nodes (4 cols) ── */}
-            <div className="col-span-1 md:col-span-4 bg-[#0f172a] rounded-xl border border-[#334155] p-stack-md flex flex-col">
-              <div className="flex justify-between items-center mb-stack-md pb-stack-sm border-b border-[#1e293b]">
+            <div className="col-span-1 md:col-span-4 bg-surface-container rounded-xl border border-surface-container-highest p-stack-md flex flex-col">
+              <div className="flex justify-between items-center mb-stack-md pb-stack-sm border-b border-surface-container-high">
                 <h2 className="text-headline-sm text-on-surface flex items-center gap-2">
                   <span className="material-symbols-outlined text-secondary">share_location</span>
                   Nearby Green Spots

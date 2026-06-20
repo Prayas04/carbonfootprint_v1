@@ -103,8 +103,9 @@
 
 @layer base {
   :root {
+    color-scheme: light;
     /* Light Mode */
-    --surface-tint: #4d7c0f;
+    --surface-tint: #15803d;
     --on-tertiary-fixed: #2a1700;
     --on-error: #ffffff;
     --tertiary-fixed-dim: #ffb95f;
@@ -130,7 +131,7 @@
     --inverse-surface: #1e293b;
     --error: #dc2626;
     --inverse-primary: #bef264;
-    --on-secondary-container: #064e3b;
+    --on-secondary-container: #ffffff;
     --surface-container: #f1f5f9;
     --on-tertiary: #ffffff;
     --outline-variant: #e2e8f0;
@@ -142,18 +143,19 @@
     --on-secondary: #ffffff;
     --on-tertiary-fixed-variant: #653e00;
     --outline: #94a3b8;
-    --primary-fixed: #a3e635;
-    --primary-container: #d9f99d;
-    --primary: #4d7c0f;
+    --primary-fixed: #16a34a;
+    --primary-container: #15803d;
+    --primary: #15803d;
     --inverse-on-surface: #f1f5f9;
-    --on-primary-container: #1a2e05;
+    --on-primary-container: #ffffff;
     --on-surface-variant: #475569;
     --error-container: #fecaca;
-    --secondary-container: #a7f3d0;
-    --primary-fixed-dim: #65a30d;
+    --secondary-container: #0d9488;
+    --primary-fixed-dim: #15803d;
   }
 
   .dark {
+    color-scheme: dark;
     /* Dark Mode */
     --surface-tint: #a4d64c;
     --on-tertiary-fixed: #2a1700;

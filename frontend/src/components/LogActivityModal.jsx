@@ -10,6 +10,7 @@ const CATEGORIES = {
       Walk: { icon: 'directions_walk', impactPerUnit: 0.0 },
       Bike: { icon: 'directions_bike', impactPerUnit: 0.0 },
       Transit: { icon: 'directions_bus', impactPerUnit: 0.05 },
+      Train: { icon: 'directions_railway', impactPerUnit: 0.04 },
       Carpool: { icon: 'local_taxi', impactPerUnit: 0.10 },
       Car: { icon: 'directions_car', impactPerUnit: 0.20 },
       Flight: { icon: 'flight', impactPerUnit: 0.25 },
@@ -129,7 +130,7 @@ export default function LogActivityModal({ isOpen, onClose, onSuccess }) {
   const impact = calculateImpact()
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#020617]/80 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-surface-dim/80 backdrop-blur-sm p-4">
       <div className="bg-surface border border-surface-container-highest rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="px-6 py-4 border-b border-surface-container-highest flex justify-between items-center bg-surface-container/30">
@@ -169,7 +170,7 @@ export default function LogActivityModal({ isOpen, onClose, onSuccess }) {
                     }}
                     className={`flex items-center gap-1.5 px-4 py-2 rounded-full border transition-all whitespace-nowrap ${
                       category === cat
-                        ? 'bg-primary-container text-[#020617] border-primary font-bold shadow-sm'
+                        ? 'bg-primary-container text-on-primary-container border-primary font-bold shadow-sm'
                         : 'bg-surface-container-lowest text-on-surface-variant border-surface-container-highest hover:border-outline hover:text-on-surface'
                     }`}
                   >
@@ -308,7 +309,7 @@ export default function LogActivityModal({ isOpen, onClose, onSuccess }) {
             type="submit" 
             form="activity-form"
             disabled={isSubmitting}
-            className="px-6 py-2 rounded-lg bg-primary text-[#020617] text-body-sm font-bold shadow hover:bg-primary-fixed transition-all disabled:opacity-70 flex items-center gap-2"
+            className="px-6 py-2 rounded-lg bg-primary text-on-primary-container text-body-sm font-bold shadow hover:bg-primary-fixed transition-all disabled:opacity-70 flex items-center gap-2"
           >
             {isSubmitting ? (
               <><span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span> Saving...</>

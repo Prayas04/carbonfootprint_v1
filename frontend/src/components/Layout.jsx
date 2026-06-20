@@ -77,6 +77,10 @@ export default function Layout({ children }) {
 
         {/* Footer Nav */}
         <div className="mt-auto flex flex-col gap-1 px-3 border-t border-surface-container-highest pt-stack-md">
+          <button onClick={() => window.open('YOUR_GOOGLE_FORM_LINK_HERE', '_blank')} className="flex items-center gap-3 px-3 py-2 rounded hover:bg-surface-container-low transition-colors text-on-surface-variant w-full text-left">
+            <span className="material-symbols-outlined text-[20px]">rate_review</span>
+            <span className="text-body-sm">Feedback</span>
+          </button>
           <button onClick={() => window.dispatchEvent(new Event('open-settings'))} className="flex items-center gap-3 px-3 py-2 rounded hover:bg-surface-container-low transition-colors text-on-surface-variant w-full text-left">
             <span className="material-symbols-outlined text-[20px]">settings</span>
             <span className="text-body-sm">Settings</span>

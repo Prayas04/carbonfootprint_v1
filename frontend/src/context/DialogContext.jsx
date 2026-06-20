@@ -57,7 +57,7 @@ function DialogModal({ type, title, message, defaultValue, onConfirm, onCancel, 
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#020617]/80 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-surface-dim/80 backdrop-blur-sm p-4">
       <div className="bg-surface border border-surface-container-highest rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col">
         {/* Header */}
         <div className="px-6 py-4 border-b border-surface-container-highest flex justify-between items-center bg-surface-container/30">
@@ -106,7 +106,7 @@ function DialogModal({ type, title, message, defaultValue, onConfirm, onCancel, 
             type={type === 'prompt' ? "submit" : "button"}
             form={type === 'prompt' ? "dialog-form" : undefined}
             onClick={type !== 'prompt' ? handleSubmit : undefined}
-            className={`px-6 py-2 rounded-lg text-[#020617] text-body-sm font-bold shadow transition-all ${
+            className={`px-6 py-2 rounded-lg text-on-primary-container text-body-sm font-bold shadow transition-all ${
               type === 'alert' ? 'bg-primary hover:bg-primary-fixed' : 
               type === 'confirm' ? 'bg-secondary hover:brightness-110' : 
               'bg-tertiary-container hover:brightness-110'

@@ -5,7 +5,7 @@ import Layout from '../components/Layout.jsx'
 import './ActivityLedger.css'
 
 const CATEGORY_MODES = [
-  { label: 'Transit', options: [{val: 'Walk', text: '🚶 Walk'}, {val: 'Bike', text: '🚴 Bike'}, {val: 'Transit', text: '🚌 Transit'}, {val: 'Carpool', text: '🚕 Carpool'}, {val: 'Car', text: '🚗 Car'}, {val: 'Flight', text: '✈️ Flight'}] },
+  { label: 'Transit', options: [{val: 'Walk', text: '🚶 Walk'}, {val: 'Bike', text: '🚴 Bike'}, {val: 'Transit', text: '🚌 Transit'}, {val: 'Train', text: '🚆 Train'}, {val: 'Carpool', text: '🚕 Carpool'}, {val: 'Car', text: '🚗 Car'}, {val: 'Flight', text: '✈️ Flight'}] },
   { label: 'Diet', options: [{val: 'Vegan', text: '🌱 Vegan'}, {val: 'Vegetarian', text: '🥗 Vegetarian'}, {val: 'Pescatarian', text: '🐟 Pescatarian'}, {val: 'Meat', text: '🥩 Meat'}] },
   { label: 'Energy', options: [{val: 'Electricity', text: '⚡ Electricity'}, {val: 'Heating', text: '🔥 Heating'}] },
   { label: 'Shopping', options: [{val: 'Clothing', text: '👕 Clothing'}, {val: 'Electronics', text: '💻 Electronics'}] }
@@ -22,6 +22,7 @@ export default function ActivityLedger() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [impactThreshold, setImpactThreshold] = useState(0)
+  const todayStr = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0];
   const [startDate, setStartDate] = useState(() => {
     const d = new Date()
     d.setDate(d.getDate() - 7)
@@ -46,7 +47,14 @@ export default function ActivityLedger() {
     try {
       const [metricsData, eventsData] = await Promise.all([
         getMetrics(),
-        getEvents({ page: currentPage, per_page: 10, mode: modeFilter || undefined }),
+        getEvents({ 
+          page: currentPage, 
+          per_page: 10, 
+          mode: modeFilter || undefined,
+          date_from: startDate <= endDate ? startDate : endDate,
+          date_to: startDate <= endDate ? endDate : startDate,
+          impact_min: impactThreshold > 0 ? impactThreshold : undefined
+        }),
       ])
       setMetrics(metricsData.metrics)
       setRows(eventsData.data)
@@ -56,7 +64,7 @@ export default function ActivityLedger() {
     } finally {
       setLoading(false)
     }
-  }, [currentPage, modeFilter])
+  }, [currentPage, modeFilter, startDate, endDate, impactThreshold])
 
   useEffect(() => {
     fetchData()
@@ -179,6 +187,7 @@ export default function ActivityLedger() {
               type="date" 
               className="bg-transparent text-data-sm font-mono text-on-surface focus:outline-none border-none outline-none appearance-none" 
               value={startDate} 
+              max={todayStr}
               onChange={e => setStartDate(e.target.value)}
             />
             <span className="text-on-surface-variant text-data-sm">-</span>
@@ -186,6 +195,7 @@ export default function ActivityLedger() {
               type="date" 
               className="bg-transparent text-data-sm font-mono text-on-surface focus:outline-none border-none outline-none appearance-none" 
               value={endDate} 
+              max={todayStr}
               onChange={e => setEndDate(e.target.value)}
             />
           </div>
@@ -282,7 +292,7 @@ export default function ActivityLedger() {
                       </td>
                       <td className="py-3 px-4">
                         {row.origin !== 'N/A' && row.destination !== 'N/A' ? (
-                          <div className="w-16 h-8 bg-surface-container-highest rounded border border-surface-container-highest overflow-hidden relative flex items-center justify-center hover:bg-primary-container hover:text-[#020617] transition-colors">
+                          <div className="w-16 h-8 bg-surface-container-highest rounded border border-surface-container-highest overflow-hidden relative flex items-center justify-center hover:bg-primary-container hover:text-on-primary-container transition-colors">
                             <span className="material-symbols-outlined text-[16px]">map</span>
                           </div>
                         ) : (
