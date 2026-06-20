@@ -12,6 +12,8 @@ class GreenNode(Base):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     distance_km: Mapped[float] = mapped_column(Float, nullable=False)
     rate_tco2e_per_day: Mapped[float] = mapped_column(Float, nullable=False)
-    status: Mapped[str] = mapped_column(String(20), default="Active")  # Active | Offline
+    status: Mapped[str] = mapped_column(
+        String(20), default="Active"
+    )  # Active | Offline
     latitude: Mapped[float] = mapped_column(Float, nullable=True)
     longitude: Mapped[float] = mapped_column(Float, nullable=True)

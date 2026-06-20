@@ -10,8 +10,12 @@ class Budget(Base):
     __tablename__ = "budgets"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False, index=True)
-    cycle_name: Mapped[str] = mapped_column(String(100), nullable=False)  # e.g., "MAY CYCLE"
+    user_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("users.id"), nullable=False, index=True
+    )
+    cycle_name: Mapped[str] = mapped_column(
+        String(100), nullable=False
+    )  # e.g., "MAY CYCLE"
     total_kg: Mapped[float] = mapped_column(Float, nullable=False)
     used_kg: Mapped[float] = mapped_column(Float, default=0.0)
     start_date: Mapped[date] = mapped_column(Date, nullable=False)

@@ -5,10 +5,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.user import User
 from app.models.wallet import Wallet
-from app.middleware.auth import hash_password, verify_password, create_access_token, create_refresh_token
+from app.middleware.auth import (
+    hash_password,
+    verify_password,
+    create_access_token,
+    create_refresh_token,
+)
 
 
-async def register_user(db: AsyncSession, email: str, password: str, full_name: str) -> User:
+async def register_user(
+    db: AsyncSession, email: str, password: str, full_name: str
+) -> User:
     """Register a new user with wallet and engine preferences."""
     # Check existing
     result = await db.execute(select(User).where(User.email == email))

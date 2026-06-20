@@ -13,7 +13,9 @@ async def get_insights(db: AsyncSession, user: User) -> InsightsResponse:
 
     # --- Aggregate user's data ---
     total_result = await db.execute(
-        select(func.sum(TransitEvent.impact_kg_co2e)).where(TransitEvent.user_id == user.id)
+        select(func.sum(TransitEvent.impact_kg_co2e)).where(
+            TransitEvent.user_id == user.id
+        )
     )
     total_co2 = abs(total_result.scalar() or 0.0)
 
@@ -33,8 +35,9 @@ async def get_insights(db: AsyncSession, user: User) -> InsightsResponse:
 
     # Total savings from green modes
     savings_result = await db.execute(
-        select(func.sum(func.abs(TransitEvent.impact_kg_co2e)))
-        .where(TransitEvent.user_id == user.id, TransitEvent.impact_kg_co2e < 0)
+        select(func.sum(func.abs(TransitEvent.impact_kg_co2e))).where(
+            TransitEvent.user_id == user.id, TransitEvent.impact_kg_co2e < 0
+        )
     )
     total_savings = savings_result.scalar() or 0.0
 
@@ -43,7 +46,7 @@ async def get_insights(db: AsyncSession, user: User) -> InsightsResponse:
         today = InsightItem(
             title="You're doing amazing! 🌟",
             description=f"You've chosen green transport {green_count} times — that's more than car trips! "
-                        f"You've already offset {total_savings:.1f} kg CO₂. Keep biking and walking to stay ahead!",
+            f"You've already offset {total_savings:.1f} kg CO₂. Keep biking and walking to stay ahead!",
             icon="celebration",
             type="tip",
             impact_kg=total_savings,
@@ -52,7 +55,7 @@ async def get_insights(db: AsyncSession, user: User) -> InsightsResponse:
         today = InsightItem(
             title="Small swaps, big impact 💡",
             description=f"You took {car_count} car trips recently. Switching just 2 of those to the bus could "
-                        f"save about {car_count * 1.5:.1f} kg CO₂ — that's like planting a small tree!",
+            f"save about {car_count * 1.5:.1f} kg CO₂ — that's like planting a small tree!",
             icon="swap_horiz",
             type="tip",
             impact_kg=car_count * 1.5,
@@ -94,37 +97,45 @@ async def get_insights(db: AsyncSession, user: User) -> InsightsResponse:
     # --- Achievements (based on real data) ---
     achievements = []
     if total_activities >= 5:
-        achievements.append(InsightItem(
-            title="🏅 First Steps",
-            description=f"You've logged {total_activities} activities! You're building a great habit.",
-            icon="military_tech",
-            type="achievement",
-            impact_kg=None,
-        ))
+        achievements.append(
+            InsightItem(
+                title="🏅 First Steps",
+                description=f"You've logged {total_activities} activities! You're building a great habit.",
+                icon="military_tech",
+                type="achievement",
+                impact_kg=None,
+            )
+        )
     if green_count >= 3:
-        achievements.append(InsightItem(
-            title="🌿 Green Champion",
-            description=f"You've taken {green_count} eco-friendly trips. The planet thanks you!",
-            icon="eco",
-            type="achievement",
-            impact_kg=total_savings,
-        ))
+        achievements.append(
+            InsightItem(
+                title="🌿 Green Champion",
+                description=f"You've taken {green_count} eco-friendly trips. The planet thanks you!",
+                icon="eco",
+                type="achievement",
+                impact_kg=total_savings,
+            )
+        )
     if total_savings >= 10:
-        achievements.append(InsightItem(
-            title="🌳 Tree Planter",
-            description=f"You've saved {total_savings:.1f} kg CO₂ — equivalent to a young tree absorbing CO₂ for a year!",
-            icon="park",
-            type="achievement",
-            impact_kg=total_savings,
-        ))
+        achievements.append(
+            InsightItem(
+                title="🌳 Tree Planter",
+                description=f"You've saved {total_savings:.1f} kg CO₂ — equivalent to a young tree absorbing CO₂ for a year!",
+                icon="park",
+                type="achievement",
+                impact_kg=total_savings,
+            )
+        )
     if not achievements:
-        achievements.append(InsightItem(
-            title="🎯 Getting Started",
-            description="Log more activities to unlock achievements! You're just getting started.",
-            icon="flag",
-            type="achievement",
-            impact_kg=None,
-        ))
+        achievements.append(
+            InsightItem(
+                title="🎯 Getting Started",
+                description="Log more activities to unlock achievements! You're just getting started.",
+                icon="flag",
+                type="achievement",
+                impact_kg=None,
+            )
+        )
 
     # --- Impact Equivalences ---
     equivalences = []

@@ -44,6 +44,7 @@ app.include_router(activity.router)
 app.include_router(wallet.router)
 app.include_router(insights.router)
 
+
 @app.get("/api/health", tags=["Health"])
 async def health_check():
     """Health check endpoint."""

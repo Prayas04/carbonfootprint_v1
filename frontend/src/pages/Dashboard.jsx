@@ -1,9 +1,72 @@
-import { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, memo } from 'react'
 import { Link } from 'react-router-dom'
 import { getDashboard } from '../api/dashboard.js'
 import { useDialog } from '../context/DialogContext.jsx'
 import Layout from '../components/Layout.jsx'
 import './Dashboard.css'
+
+const GlobalImpactCard = memo(({ globalImpact }) => (
+  <div className="xl:col-span-8 bento-card p-container-padding flex flex-col justify-between relative overflow-hidden">
+    <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary-container/5 to-transparent pointer-events-none"></div>
+    <div className="z-10">
+      <h2 className="text-label-caps text-on-surface-variant uppercase mb-2">My Carbon Footprint</h2>
+      <div className="flex items-baseline gap-3 mb-6">
+        <span className="text-display-lg text-primary-container tracking-tighter">{globalImpact.total_co2e_kg.toLocaleString()}</span>
+        <span className="text-headline-sm text-on-surface-variant">kg CO₂</span>
+      </div>
+    </div>
+    <div className="h-32 w-full mt-auto relative z-10">
+      <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 400 100">
+        <line stroke="#1e293b" strokeDasharray="2 2" strokeWidth="1" x1="0" x2="400" y1="25" y2="25" />
+        <line stroke="#1e293b" strokeDasharray="2 2" strokeWidth="1" x1="0" x2="400" y1="50" y2="50" />
+        <line stroke="#1e293b" strokeDasharray="2 2" strokeWidth="1" x1="0" x2="400" y1="75" y2="75" />
+        <path className="sparkline" d="M0,80 Q50,70 100,85 T200,60 T300,75 T400,40" fill="none" stroke="#2e3447" strokeWidth="1.5" />
+        <path className="sparkline" d="M0,60 Q50,55 100,70 T200,40 T300,55 T400,20" fill="none" stroke="#6ffbbe" strokeWidth="2" style={{ animationDelay: '0.2s' }} />
+        <path d="M0,60 Q50,55 100,70 T200,40 T300,55 T400,20 L400,100 L0,100 Z" fill="url(#sparkGradient)" opacity="0.1" />
+        <defs>
+          <linearGradient id="sparkGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+            <stop offset="0%" stopColor="#4edea3" stopOpacity="1" />
+            <stop offset="100%" stopColor="#0c1324" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <div className="flex justify-between mt-2 text-label-caps text-on-surface-variant opacity-60">
+        <span>30-Day Trend</span>
+        <span>Today</span>
+      </div>
+    </div>
+  </div>
+));
+
+GlobalImpactCard.displayName = 'GlobalImpactCard';
+
+const DailyInsightCard = memo(({ dailyInsight }) => (
+  <div className="xl:col-span-4 flex flex-col gap-gutter h-full">
+    <div className="bento-card p-5 flex flex-col justify-between flex-1 relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-20 h-20 bg-secondary/10 rounded-bl-[80px]"></div>
+      <div className="flex items-center gap-2 mb-3">
+        <span className="material-symbols-outlined text-secondary" style={{ fontVariationSettings: "'FILL' 1", fontSize: '22px' }}>{dailyInsight.icon}</span>
+        <span className="text-label-caps text-on-surface-variant uppercase">Today's Insight</span>
+      </div>
+      <p className="text-body-sm text-on-surface leading-relaxed flex-1">{dailyInsight.message}</p>
+      {dailyInsight.co2_saved_today > 0 && (
+        <div className="mt-3 flex items-center gap-2 text-secondary">
+          <span className="material-symbols-outlined text-[16px]">arrow_downward</span>
+          <span className="text-data-sm font-mono">{dailyInsight.co2_saved_today} kg CO₂ saved today</span>
+        </div>
+      )}
+    </div>
+    <div className="bento-card p-5 flex flex-col items-center justify-center text-center">
+      <div className="flex items-center gap-2 mb-2">
+        <span className="material-symbols-outlined text-primary-container" style={{ fontVariationSettings: "'FILL' 1", fontSize: '28px' }}>local_fire_department</span>
+        <span className="text-display-lg text-primary-container tracking-tighter">{dailyInsight.streak_days}</span>
+      </div>
+      <span className="text-label-caps text-on-surface-variant uppercase">Day Green Streak 🌱</span>
+    </div>
+  </div>
+));
+
+DailyInsightCard.displayName = 'DailyInsightCard';
 
 export default function Dashboard() {
   const [data, setData] = useState(null)
@@ -108,61 +171,10 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-gutter">
 
               {/* My Carbon Footprint */}
-              <div className="xl:col-span-8 bento-card p-container-padding flex flex-col justify-between relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary-container/5 to-transparent pointer-events-none"></div>
-                <div className="z-10">
-                  <h2 className="text-label-caps text-on-surface-variant uppercase mb-2">My Carbon Footprint</h2>
-                  <div className="flex items-baseline gap-3 mb-6">
-                    <span className="text-display-lg text-primary-container tracking-tighter">{globalImpact.total_co2e_kg.toLocaleString()}</span>
-                    <span className="text-headline-sm text-on-surface-variant">kg CO₂</span>
-                  </div>
-                </div>
-                <div className="h-32 w-full mt-auto relative z-10">
-                  <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 400 100">
-                    <line stroke="#1e293b" strokeDasharray="2 2" strokeWidth="1" x1="0" x2="400" y1="25" y2="25" />
-                    <line stroke="#1e293b" strokeDasharray="2 2" strokeWidth="1" x1="0" x2="400" y1="50" y2="50" />
-                    <line stroke="#1e293b" strokeDasharray="2 2" strokeWidth="1" x1="0" x2="400" y1="75" y2="75" />
-                    <path className="sparkline" d="M0,80 Q50,70 100,85 T200,60 T300,75 T400,40" fill="none" stroke="#2e3447" strokeWidth="1.5" />
-                    <path className="sparkline" d="M0,60 Q50,55 100,70 T200,40 T300,55 T400,20" fill="none" stroke="#6ffbbe" strokeWidth="2" style={{ animationDelay: '0.2s' }} />
-                    <path d="M0,60 Q50,55 100,70 T200,40 T300,55 T400,20 L400,100 L0,100 Z" fill="url(#sparkGradient)" opacity="0.1" />
-                    <defs>
-                      <linearGradient id="sparkGradient" x1="0%" x2="0%" y1="0%" y2="100%">
-                        <stop offset="0%" stopColor="#4edea3" stopOpacity="1" />
-                        <stop offset="100%" stopColor="#0c1324" stopOpacity="0" />
-                      </linearGradient>
-                    </defs>
-                  </svg>
-                  <div className="flex justify-between mt-2 text-label-caps text-on-surface-variant opacity-60">
-                    <span>30-Day Trend</span>
-                    <span>Today</span>
-                  </div>
-                </div>
-              </div>
+              <GlobalImpactCard globalImpact={globalImpact} />
 
               {/* Daily Insight & Streak */}
-              <div className="xl:col-span-4 flex flex-col gap-gutter h-full">
-                <div className="bento-card p-5 flex flex-col justify-between flex-1 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-20 h-20 bg-secondary/10 rounded-bl-[80px]"></div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="material-symbols-outlined text-secondary" style={{ fontVariationSettings: "'FILL' 1", fontSize: '22px' }}>{dailyInsight.icon}</span>
-                    <span className="text-label-caps text-on-surface-variant uppercase">Today's Insight</span>
-                  </div>
-                  <p className="text-body-sm text-on-surface leading-relaxed flex-1">{dailyInsight.message}</p>
-                  {dailyInsight.co2_saved_today > 0 && (
-                    <div className="mt-3 flex items-center gap-2 text-secondary">
-                      <span className="material-symbols-outlined text-[16px]">arrow_downward</span>
-                      <span className="text-data-sm font-mono">{dailyInsight.co2_saved_today} kg CO₂ saved today</span>
-                    </div>
-                  )}
-                </div>
-                <div className="bento-card p-5 flex flex-col items-center justify-center text-center">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="material-symbols-outlined text-primary-container" style={{ fontVariationSettings: "'FILL' 1", fontSize: '28px' }}>local_fire_department</span>
-                    <span className="text-display-lg text-primary-container tracking-tighter">{dailyInsight.streak_days}</span>
-                  </div>
-                  <span className="text-label-caps text-on-surface-variant uppercase">Day Green Streak 🌱</span>
-                </div>
-              </div>
+              <DailyInsightCard dailyInsight={dailyInsight} />
             </div>
 
             {/* ── Middle Row: Active Budget & Activity ── */}

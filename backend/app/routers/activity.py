@@ -47,7 +47,16 @@ async def list_events(
 ):
     """Get paginated transit events with optional filtering and sorting."""
     return await get_events(
-        db, current_user, page, per_page, date_from, date_to, mode, impact_min, sort_by, sort_order
+        db,
+        current_user,
+        page,
+        per_page,
+        date_from,
+        date_to,
+        mode,
+        impact_min,
+        sort_by,
+        sort_order,
     )
 
 
@@ -70,9 +79,13 @@ async def update_transit_event(
     db: AsyncSession = Depends(get_db),
 ):
     """Update an existing transit event."""
-    event = await update_event(db, current_user, event_id, data.model_dump(exclude_unset=True))
+    event = await update_event(
+        db, current_user, event_id, data.model_dump(exclude_unset=True)
+    )
     if not event:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Event not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Event not found"
+        )
     return {"id": event.id, "message": "Event updated successfully"}
 
 
@@ -85,4 +98,6 @@ async def delete_transit_event(
     """Delete a transit event."""
     deleted = await delete_event(db, current_user, event_id)
     if not deleted:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Event not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Event not found"
+        )

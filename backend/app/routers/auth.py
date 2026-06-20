@@ -13,12 +13,18 @@ from app.schemas.auth import (
     TokenRefresh,
     UserResponse,
 )
-from app.services.auth_service import register_user, authenticate_user, refresh_access_token
+from app.services.auth_service import (
+    register_user,
+    authenticate_user,
+    refresh_access_token,
+)
 
 router = APIRouter(prefix="/api/auth", tags=["Authentication"])
 
 
-@router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED
+)
 async def register(data: UserRegister, db: AsyncSession = Depends(get_db)):
     """Register a new user account."""
     try:

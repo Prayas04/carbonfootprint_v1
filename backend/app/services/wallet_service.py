@@ -20,10 +20,16 @@ from app.schemas.wallet import (
 
 # Mapping transaction type → badge styling (matches frontend classes)
 TYPE_STYLES = {
-    "Settlement": {"bg": "bg-surface-container-highest text-on-surface", "amount_color": "text-error"},
+    "Settlement": {
+        "bg": "bg-surface-container-highest text-on-surface",
+        "amount_color": "text-error",
+    },
     "Credit": {"bg": "bg-primary/10 text-primary", "amount_color": "text-secondary"},
     "Bonus": {"bg": "bg-secondary/10 text-secondary", "amount_color": "text-secondary"},
-    "Pending": {"bg": "bg-tertiary-fixed-dim/10 text-tertiary-fixed-dim", "amount_color": "text-tertiary-fixed-dim"},
+    "Pending": {
+        "bg": "bg-tertiary-fixed-dim/10 text-tertiary-fixed-dim",
+        "amount_color": "text-tertiary-fixed-dim",
+    },
 }
 
 
@@ -33,7 +39,9 @@ async def get_wallet(db: AsyncSession, user: User) -> WalletResponse:
     wallet = result.scalar_one_or_none()
 
     if not wallet:
-        return WalletResponse(balance_tco2e=0.0, nfc_status="Inactive", card_id_last4="0000")
+        return WalletResponse(
+            balance_tco2e=0.0, nfc_status="Inactive", card_id_last4="0000"
+        )
 
     return WalletResponse(
         balance_tco2e=wallet.balance_tco2e,
@@ -60,7 +68,11 @@ async def get_transactions(db: AsyncSession, user: User) -> TransactionListRespo
     data = []
     for tx in transactions:
         style = TYPE_STYLES.get(tx.type, TYPE_STYLES["Settlement"])
-        amount_str = f"+{tx.amount_tco2e:,.2f}" if tx.amount_tco2e > 0 else f"{tx.amount_tco2e:,.2f}"
+        amount_str = (
+            f"+{tx.amount_tco2e:,.2f}"
+            if tx.amount_tco2e > 0
+            else f"{tx.amount_tco2e:,.2f}"
+        )
         data.append(
             TransactionResponse(
                 id=tx.id,
@@ -76,7 +88,9 @@ async def get_transactions(db: AsyncSession, user: User) -> TransactionListRespo
     return TransactionListResponse(data=data, total=len(data))
 
 
-async def create_transaction(db: AsyncSession, user: User, tx_data: dict) -> Transaction:
+async def create_transaction(
+    db: AsyncSession, user: User, tx_data: dict
+) -> Transaction:
     """Create a new transaction and update wallet balance."""
     result = await db.execute(select(Wallet).where(Wallet.user_id == user.id))
     wallet = result.scalar_one_or_none()
@@ -102,7 +116,20 @@ async def create_transaction(db: AsyncSession, user: User, tx_data: dict) -> Tra
 async def get_burn_rate(db: AsyncSession, user: User) -> BurnRateResponse:
     """Get burn rate analytics data for the chart."""
     # Simulated monthly burn data
-    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+    ]
     values = [8200, 7800, 9100, 8500, 7200, 6800, 7500, 8900, 9500, 10200, 11000, 12450]
 
     return BurnRateResponse(
