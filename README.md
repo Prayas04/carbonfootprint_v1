@@ -18,7 +18,7 @@
 ## 📑 Table of Contents
 
 - [Description — The "Why"](#-description--the-why)
-- [Prerequisites & Setup](#-prerequisites--setup)
+- [Prerequisites & Setup](#%EF%B8%8F-prerequisites--setup)
   - [System Requirements](#system-requirements)
   - [Step 1: Clone the Repository](#step-1-clone-the-repository)
   - [Step 2: Backend Setup](#step-2-backend-setup)
@@ -31,7 +31,7 @@
   - [Managing Your Green Wallet](#managing-your-green-wallet)
   - [Customizing Appearance](#customizing-appearance)
   - [API Endpoints](#api-endpoints)
-- [Project Structure](#-project-structure)
+- [Project Structure](#%EF%B8%8F-project-structure)
 - [Contributing](#-contributing)
 - [License](#-license)
 - [Support & Contact](#-support--contact)
