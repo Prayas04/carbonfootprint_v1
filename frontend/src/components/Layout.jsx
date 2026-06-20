@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import LogActivityModal from './LogActivityModal.jsx'
+import SettingsModal from './SettingsModal.jsx'
 
 const navItems = [
   { icon: 'dashboard', label: 'Dashboard', path: '/dashboard' },
@@ -76,10 +77,10 @@ export default function Layout({ children }) {
 
         {/* Footer Nav */}
         <div className="mt-auto flex flex-col gap-1 px-3 border-t border-surface-container-highest pt-stack-md">
-          <a href="#" className="flex items-center gap-3 px-3 py-2 rounded hover:bg-surface-container-low transition-colors text-on-surface-variant">
+          <button onClick={() => window.dispatchEvent(new Event('open-settings'))} className="flex items-center gap-3 px-3 py-2 rounded hover:bg-surface-container-low transition-colors text-on-surface-variant w-full text-left">
             <span className="material-symbols-outlined text-[20px]">settings</span>
             <span className="text-body-sm">Settings</span>
-          </a>
+          </button>
           <button onClick={logout} className="flex items-center gap-3 px-3 py-2 rounded hover:bg-surface-container-low transition-colors text-on-surface-variant w-full text-left">
             <span className="material-symbols-outlined text-[20px]">logout</span>
             <span className="text-body-sm">Logout</span>
@@ -131,6 +132,7 @@ export default function Layout({ children }) {
         onClose={() => setIsLogModalOpen(false)} 
         onSuccess={handleActivityLogged} 
       />
+      <SettingsModal />
     </div>
   )
 }

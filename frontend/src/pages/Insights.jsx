@@ -66,7 +66,7 @@ export default function Insights() {
             <button onClick={() => showAlert("Notifications", "No new notifications at this time.")} className="text-on-surface-variant hover:text-primary transition-colors h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-container-low focus:ring-1 focus:ring-primary">
               <span className="material-symbols-outlined text-[20px]">notifications</span>
             </button>
-            <button onClick={() => showAlert("Account", "Account settings module coming soon.")} className="text-on-surface-variant hover:text-primary transition-colors h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-container-low focus:ring-1 focus:ring-primary">
+            <button onClick={() => window.dispatchEvent(new Event('open-settings'))} className="text-on-surface-variant hover:text-primary transition-colors h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-container-low focus:ring-1 focus:ring-primary">
               <span className="material-symbols-outlined text-[20px]">account_circle</span>
             </button>
           </div>
