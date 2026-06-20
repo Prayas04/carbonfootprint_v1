@@ -121,27 +121,27 @@ Create a `.env` file inside the `backend/` directory. This file stores sensitive
 ```env
 # ─── Database ───────────────────────────────────────────────
 # For local development and production with PostgreSQL:
-DATABASE_URL=postgresql+asyncpg://user:password@host:port/dbname
+DATABASE_URL
 
 # ─── Authentication ────────────────────────────────────────
 # Generate a strong secret: python -c "import secrets; print(secrets.token_hex(32))"
-SECRET_KEY=your_super_secret_jwt_key_here
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
+SECRET_KEY
+ALGORITHM
+ACCESS_TOKEN_EXPIRE_MINUTES
 
 # ─── CORS ──────────────────────────────────────────────────
-CORS_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+CORS_ORIGINS
 ```
 
 **2d. Start the backend development server:**
 
 ```bash
-uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+uvicorn app.main:app --reload --host [YOUR_IP] --port [YOUR_PORT]
 ```
 
 You should see output confirming the server is running:
 ```
-INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Uvicorn running on http://[YOUR_IP]:[YOUR_PORT] (Press CTRL+C to quit)
 INFO:     Started reloader process
 ```
 
