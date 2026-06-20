@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { getMetrics, getEvents } from '../api/activity.js'
 import { useDialog } from '../context/DialogContext.jsx'
 import Layout from '../components/Layout.jsx'
@@ -67,14 +67,18 @@ export default function ActivityLedger() {
   }, [currentPage, modeFilter, startDate, endDate, impactThreshold])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchData()
     window.addEventListener('activity-logged', fetchData)
     return () => window.removeEventListener('activity-logged', fetchData)
   }, [fetchData])
 
   const totalPages = pagination.total_pages
-  const pageNumbers = []
-  for (let i = 1; i <= Math.min(totalPages, 5); i++) pageNumbers.push(i)
+  const pageNumbers = useMemo(() => {
+    const nums = []
+    for (let i = 1; i <= Math.min(totalPages, 5); i++) nums.push(i)
+    return nums
+  }, [totalPages])
 
   const getSelectedText = () => {
     if (!modeFilter) return "All Activities";
@@ -105,13 +109,15 @@ export default function ActivityLedger() {
     document.body.removeChild(link)
   }
 
-  const filteredRows = rows.filter(r => {
-    const matchesSearch = r.mode.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          r.origin.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          r.destination.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesImpact = parseFloat(r.impact) >= impactThreshold
-    return matchesSearch && matchesImpact
-  })
+  const filteredRows = useMemo(() => {
+    return rows.filter(r => {
+      const matchesSearch = r.mode.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            r.origin.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            r.destination.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesImpact = parseFloat(r.impact) >= impactThreshold
+      return matchesSearch && matchesImpact
+    })
+  }, [rows, searchQuery, impactThreshold])
 
   return (
     <Layout>

@@ -76,7 +76,7 @@ Before you begin, ensure you have the following software installed on your syste
 | **Python** | 3.10.0+ | Runtime for the FastAPI backend |
 | **pip** | Latest | Python package installer |
 | **Git** | Latest | Version control |
-| **PostgreSQL** *(or Supabase)* | 14+ | Production database (SQLite is used as a fallback for local dev) |
+| **PostgreSQL** *(or Supabase)* | 14+ | Production database |
 
 ### Step 1: Clone the Repository
 
@@ -120,11 +120,8 @@ Create a `.env` file inside the `backend/` directory. This file stores sensitive
 
 ```env
 # ─── Database ───────────────────────────────────────────────
-# For local development with SQLite (default, no setup needed):
-DATABASE_URL=sqlite+aiosqlite:///./carbontrack.db
-
-# For production with Supabase/PostgreSQL:
-# DATABASE_URL=postgresql+asyncpg://user:password@host:port/dbname
+# For local development and production with PostgreSQL:
+DATABASE_URL=postgresql+asyncpg://user:password@host:port/dbname
 
 # ─── Authentication ────────────────────────────────────────
 # Generate a strong secret: python -c "import secrets; print(secrets.token_hex(32))"

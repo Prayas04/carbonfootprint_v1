@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useTheme } from '../context/ThemeContext.jsx'
 
 export default function SettingsModal() {

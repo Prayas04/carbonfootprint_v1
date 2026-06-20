@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { getDashboard } from '../api/dashboard.js'
 import { useDialog } from '../context/DialogContext.jsx'
@@ -34,18 +34,23 @@ export default function Dashboard() {
   const dailyInsight = data?.daily_insight || { message: 'Start logging activities to get personalized insights!', icon: 'lightbulb', streak_days: 0, co2_saved_today: 0 }
   const budget = data?.budget || { cycle_name: '—', total_kg: 0, used_kg: 0, remaining_kg: 0, percent_used: 0 }
   
-  const displayBudget = { ...budget }
-  if (localGoal !== null) {
-    displayBudget.total_kg = localGoal
-    displayBudget.remaining_kg = Math.max(0, localGoal - displayBudget.used_kg)
-    displayBudget.percent_used = localGoal > 0 ? Math.min(100, Math.round((displayBudget.used_kg / localGoal) * 100)) : 0
-  }
+  const displayBudget = useMemo(() => {
+    const b = { ...budget }
+    if (localGoal !== null) {
+      b.total_kg = localGoal
+      b.remaining_kg = Math.max(0, localGoal - b.used_kg)
+      b.percent_used = localGoal > 0 ? Math.min(100, Math.round((b.used_kg / localGoal) * 100)) : 0
+    }
+    return b
+  }, [budget, localGoal])
 
   const rawEvents = data?.recent_events || []
-  const recentEvents = rawEvents.filter(e => 
-    e.mode.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    e.distance.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const recentEvents = useMemo(() => {
+    return rawEvents.filter(e => 
+      e.mode.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      e.distance.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  }, [rawEvents, searchQuery])
 
   const handleAdjustGoal = () => {
     showPrompt("Adjust Goal", "Enter your new monthly carbon goal in kg CO2e:", displayBudget.total_kg, (newGoal) => {

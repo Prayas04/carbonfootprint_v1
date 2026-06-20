@@ -11,10 +11,9 @@ settings = get_settings()
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=False,
-    # Supabase (PgBouncer) requires prepared statements disabled, SQLite requires check_same_thread=False
+    # Supabase (PgBouncer) requires prepared statements disabled
     connect_args=(
-        {"prepared_statement_cache_size": 0} if "postgres" in settings.DATABASE_URL else
-        {"check_same_thread": False} if "sqlite" in settings.DATABASE_URL else {}
+        {"prepared_statement_cache_size": 0} if "postgres" in settings.DATABASE_URL else {}
     ),
 )
 

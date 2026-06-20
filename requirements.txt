@@ -2,7 +2,6 @@ fastapi==0.115.12
 uvicorn==0.34.3
 sqlalchemy==2.0.41
 greenlet==3.5.1
-aiosqlite==0.21.0
 alembic==1.16.1
 pydantic>=2.13.4
 pydantic-settings==2.9.1

@@ -7,7 +7,7 @@ from functools import lru_cache
 
 class Settings(BaseSettings):
     # Database
-    DATABASE_URL: str = "sqlite+aiosqlite:///./carbontrack.db"
+    DATABASE_URL: str
 
     @field_validator("DATABASE_URL")
     @classmethod

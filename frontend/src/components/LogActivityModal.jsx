@@ -59,20 +59,17 @@ export default function LogActivityModal({ isOpen, onClose, onSuccess }) {
   const [debouncedOrigin, setDebouncedOrigin] = useState('')
   const [debouncedDestination, setDebouncedDestination] = useState('')
 
-  // Reset state when opened
-  useEffect(() => {
-    if (isOpen) {
-      setCategory('Transit')
-      setMode('Bike')
-      setAmount('')
-      setDuration('')
-      setOrigin('')
-      setDestination('')
-      setError('')
-      setDebouncedOrigin('')
-      setDebouncedDestination('')
-    }
-  }, [isOpen])
+  const resetForm = () => {
+    setCategory('Transit')
+    setMode('Bike')
+    setAmount('')
+    setDuration('')
+    setOrigin('')
+    setDestination('')
+    setError('')
+    setDebouncedOrigin('')
+    setDebouncedDestination('')
+  }
 
   // Debounce origin and destination to prevent excessive Map API calls
   useEffect(() => {
@@ -82,6 +79,11 @@ export default function LogActivityModal({ isOpen, onClose, onSuccess }) {
     }, 800)
     return () => clearTimeout(timer)
   }, [origin, destination])
+
+  const handleClose = () => {
+    resetForm()
+    onClose()
+  }
 
   if (!isOpen) return null
 
@@ -120,6 +122,7 @@ export default function LogActivityModal({ isOpen, onClose, onSuccess }) {
 
     try {
       await createEvent(payload)
+      resetForm()
       onSuccess() // triggers reload
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to log activity. Please try again.')
@@ -300,7 +303,7 @@ export default function LogActivityModal({ isOpen, onClose, onSuccess }) {
         <div className="px-6 py-4 border-t border-surface-container-highest bg-surface-container/30 flex justify-end gap-3">
           <button 
             type="button" 
-            onClick={onClose}
+            onClick={handleClose}
             className="px-4 py-2 rounded-lg text-body-sm font-medium text-on-surface hover:bg-surface-container-high transition-colors"
           >
             Cancel

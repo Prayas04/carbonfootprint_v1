@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /**
  * AuthContext — React context for authentication state management.
  * Provides login/logout/register and auto-login on mount.
