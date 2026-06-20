@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
+import LogActivityModal from './LogActivityModal.jsx'
 
 const navItems = [
   { icon: 'dashboard', label: 'Dashboard', path: '/dashboard' },
@@ -11,6 +13,12 @@ const navItems = [
 export default function Layout({ children }) {
   const { logout } = useAuth()
   const location = useLocation()
+  const [isLogModalOpen, setIsLogModalOpen] = useState(false)
+
+  const handleActivityLogged = () => {
+    setIsLogModalOpen(false)
+    window.dispatchEvent(new Event('activity-logged'))
+  }
 
   return (
     <div className="bg-background text-on-background font-sans antialiased min-h-screen flex flex-col md:flex-row overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
@@ -51,7 +59,10 @@ export default function Layout({ children }) {
 
         {/* CTA */}
         <div className="px-container-padding mt-stack-md mb-stack-lg">
-          <button className="w-full bg-primary-container text-on-primary-container text-body-sm font-semibold py-2.5 rounded shadow-sm hover:brightness-110 transition-all flex items-center justify-center gap-2">
+          <button 
+            onClick={() => setIsLogModalOpen(true)}
+            className="w-full bg-primary-container text-on-primary-container text-body-sm font-semibold py-2.5 rounded shadow-sm hover:brightness-110 transition-all flex items-center justify-center gap-2"
+          >
             <span className="material-symbols-outlined text-[18px]">add</span>
             Log Activity
           </button>
@@ -102,10 +113,18 @@ export default function Layout({ children }) {
       </nav>
 
       {/* ── Mobile FAB (Floating Action Button) ── */}
-      <button className="md:hidden fixed right-4 bottom-[88px] w-14 h-14 bg-primary-container text-on-primary-container rounded-2xl shadow-lg flex items-center justify-center z-50 hover:brightness-110 active:scale-95 transition-all">
+      <button 
+        onClick={() => setIsLogModalOpen(true)}
+        className="md:hidden fixed right-4 bottom-[88px] w-14 h-14 bg-primary-container text-on-primary-container rounded-2xl shadow-lg flex items-center justify-center z-50 hover:brightness-110 active:scale-95 transition-all"
+      >
         <span className="material-symbols-outlined text-[24px]">add</span>
       </button>
 
+      <LogActivityModal 
+        isOpen={isLogModalOpen} 
+        onClose={() => setIsLogModalOpen(false)} 
+        onSuccess={handleActivityLogged} 
+      />
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { getMetrics, getEvents } from '../api/activity.js'
 import Layout from '../components/Layout.jsx'
 import './ActivityLedger.css'
@@ -10,6 +10,7 @@ export default function ActivityLedger() {
   const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
   const [modeFilter, setModeFilter] = useState('')
+  const [expandedRowId, setExpandedRowId] = useState(null)
 
   const fetchData = useCallback(async () => {
     setLoading(true)
@@ -28,7 +29,11 @@ export default function ActivityLedger() {
     }
   }, [currentPage, modeFilter])
 
-  useEffect(() => { fetchData() }, [fetchData])
+  useEffect(() => {
+    fetchData()
+    window.addEventListener('activity-logged', fetchData)
+    return () => window.removeEventListener('activity-logged', fetchData)
+  }, [fetchData])
 
   const totalPages = pagination.total_pages
   const pageNumbers = []
@@ -152,41 +157,68 @@ export default function ActivityLedger() {
                   <th className="py-3 px-4 font-normal text-right">Impact (kg CO2e)</th>
                 </tr>
               </thead>
-              <tbody className="text-data-sm font-mono text-on-surface">
+                  <tbody className="text-data-sm font-mono text-on-surface">
                 {rows.map((row, i) => (
-                  <tr key={row.id || i} className="border-b border-surface-container-highest hover:bg-surface-container-low transition-colors group cursor-default">
-                    <td className="py-3 px-4 text-on-surface-variant">{row.timestamp}</td>
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded bg-surface-container-highest flex items-center justify-center text-on-surface-variant">
-                          <span className="material-symbols-outlined text-[14px]">{row.mode_icon}</span>
+                  <React.Fragment key={row.id || i}>
+                    <tr 
+                      className={`border-b border-surface-container-highest hover:bg-surface-container-low transition-colors group cursor-pointer ${expandedRowId === row.id ? 'bg-surface-container-low' : ''}`}
+                      onClick={() => setExpandedRowId(expandedRowId === row.id ? null : row.id)}
+                    >
+                      <td className="py-3 px-4 text-on-surface-variant">{row.timestamp}</td>
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded bg-surface-container-highest flex items-center justify-center text-on-surface-variant">
+                            <span className="material-symbols-outlined text-[14px]">{row.mode_icon}</span>
+                          </div>
+                          {row.mode}
                         </div>
-                        {row.mode}
-                      </div>
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="w-16 h-8 bg-surface-container-highest rounded border border-surface-container-highest overflow-hidden relative">
-                        {/* Route map placeholder */}
-                        <div className="absolute inset-0 bg-surface-container-high opacity-70 group-hover:opacity-100 transition-opacity"></div>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="flex flex-col gap-0.5">
-                        <span>{row.origin}</span>
-                        <span className="text-on-surface-variant">{row.destination}</span>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4 text-right">{row.distance}</td>
-                    <td className="py-3 px-4 text-right text-on-surface-variant">{row.duration}</td>
-                    <td className="py-3 px-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <span className={row.impact_color}>{row.impact}</span>
-                        <div className="w-16 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
-                          <div className={`h-full ${row.bar_color} rounded-full`} style={{ width: row.bar_width }}></div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="w-16 h-8 bg-surface-container-highest rounded border border-surface-container-highest overflow-hidden relative flex items-center justify-center hover:bg-primary-container hover:text-[#020617] transition-colors">
+                          <span className="material-symbols-outlined text-[16px]">map</span>
                         </div>
-                      </div>
-                    </td>
-                  </tr>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="flex flex-col gap-0.5">
+                          <span>{row.origin}</span>
+                          <span className="text-on-surface-variant">{row.destination}</span>
+                        </div>
+                      </td>
+                      <td className="py-3 px-4 text-right">{row.distance}</td>
+                      <td className="py-3 px-4 text-right text-on-surface-variant">{row.duration}</td>
+                      <td className="py-3 px-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <span className={row.impact_color}>{row.impact}</span>
+                          <div className="w-16 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+                            <div className={`h-full ${row.bar_color} rounded-full`} style={{ width: row.bar_width }}></div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    {expandedRowId === row.id && row.origin && row.destination && (
+                      <tr className="bg-surface-container-lowest border-b border-surface-container-highest">
+                        <td colSpan="7" className="p-4">
+                          <div className="w-full h-64 rounded-xl overflow-hidden border border-surface-container-highest relative">
+                            <iframe
+                              width="100%"
+                              height="100%"
+                              style={{ border: 0 }}
+                              loading="lazy"
+                              allowFullScreen
+                              referrerPolicy="no-referrer-when-downgrade"
+                              src={`https://maps.google.com/maps?saddr=${encodeURIComponent(row.origin)}&daddr=${encodeURIComponent(row.destination)}&output=embed`}
+                            ></iframe>
+                            <button 
+                              onClick={(e) => { e.stopPropagation(); setExpandedRowId(null); }}
+                              className="absolute top-2 right-2 bg-surface border border-surface-container-highest text-on-surface w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-container-low transition-colors shadow-md"
+                            >
+                              <span className="material-symbols-outlined text-[18px]">close</span>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                 ))}
               </tbody>
             </table>

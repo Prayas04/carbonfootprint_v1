@@ -20,7 +20,10 @@ export default function Dashboard() {
         setLoading(false)
       }
     }
+    
     fetchData()
+    window.addEventListener('activity-logged', fetchData)
+    return () => window.removeEventListener('activity-logged', fetchData)
   }, [])
 
   const globalImpact = data?.global_impact || { total_co2e_kg: 0, trend_data: [] }

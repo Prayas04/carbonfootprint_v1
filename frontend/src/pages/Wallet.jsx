@@ -26,7 +26,10 @@ export default function Wallet() {
         setLoading(false)
       }
     }
+    
     fetchData()
+    window.addEventListener('activity-logged', fetchData)
+    return () => window.removeEventListener('activity-logged', fetchData)
   }, [])
 
   return (
@@ -177,6 +180,20 @@ export default function Wallet() {
                   Nearby Green Spots
                 </h2>
               </div>
+
+              {/* Google Maps Search Preview */}
+              <div className="w-full h-48 rounded-lg overflow-hidden border border-surface-container-highest mb-4 flex-shrink-0">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                  src={`https://maps.google.com/maps?q=EV+charging+stations+OR+recycling+centers&output=embed`}
+                ></iframe>
+              </div>
+
               <div className="flex flex-col gap-stack-sm flex-1 overflow-y-auto">
                 {greenNodes.map((node, i) => (
                   <div
