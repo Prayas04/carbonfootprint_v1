@@ -15,29 +15,6 @@
 
 ---
 
-## 📄 Description — The "Why"
-
-Climate change is one of the most pressing challenges facing humanity, yet for most individuals, their personal contribution to carbon emissions remains invisible and abstract. **How much CO₂ did your morning commute produce? How does switching from a meat-based diet to a vegetarian one actually compare?** Without tangible answers, people lack the motivation and the data to make meaningful changes to their daily habits.
-
-**CarbonTrack** solves this problem by providing a personal sustainability command center. It is a full-stack web application that empowers users to:
-
-1.  **Log** everyday activities — commuting, eating, energy usage, shopping — and instantly see their carbon footprint calculated in real-time using scientifically-backed emission factors.
-2.  **Analyze** their environmental impact over time through interactive charts, trend lines, and filterable data ledgers, turning raw numbers into actionable insights.
-3.  **Get Rewarded** for making sustainable choices through a gamified "EcoPoints" wallet system, achievement badges, and challenge completions that make going green genuinely fun.
-
-### What Makes CarbonTrack Different?
-
-| Feature | Description |
-|---|---|
-| **Real-Time Impact Estimation** | See your CO₂ impact *before* you even submit an activity, calculated live as you fill out the form. |
-| **Maps Integration** | Implemented a demo application integration of maps. Still under development |
-| **Gamified Rewards Wallet** | Earn EcoPoints for low-carbon choices. View your transaction history, discover "Green Nodes" on an interactive heatmap, and track your rewards growth over time. |
-| **Adaptive Theming Engine** | A professionally designed Light & Dark mode system built on semantic CSS variables. Every pixel — including native browser date pickers — adapts flawlessly to the user's preference. |
-| **Smart Date Filtering** | The Activity Ledger date filters automatically prevent future date selection and intelligently handle reversed date ranges. |
-| **One-Click CSV Export** | Download your entire activity history as a CSV file for external analysis, tax records, or sustainability audits. |
-
----
-
 ## 📑 Table of Contents
 
 - [Description — The "Why"](#-description--the-why)
@@ -58,6 +35,29 @@ Climate change is one of the most pressing challenges facing humanity, yet for m
 - [Contributing](#-contributing)
 - [License](#-license)
 - [Support & Contact](#-support--contact)
+
+---
+
+## 📄 Description — The "Why"
+
+Climate change is one of the most pressing challenges facing humanity, yet for most individuals, their personal contribution to carbon emissions remains invisible and abstract. **How much CO₂ did your morning commute produce? How does switching from a meat-based diet to a vegetarian one actually compare?** Without tangible answers, people lack the motivation and the data to make meaningful changes to their daily habits.
+
+**CarbonTrack** solves this problem by providing a personal sustainability command center. It is a full-stack web application that empowers users to:
+
+1.  **Log** everyday activities — commuting, eating, energy usage, shopping — and instantly see their carbon footprint calculated in real-time using scientifically-backed emission factors.
+2.  **Analyze** their environmental impact over time through interactive charts, trend lines, and filterable data ledgers, turning raw numbers into actionable insights.
+3.  **Get Rewarded** for making sustainable choices through a gamified "EcoPoints" wallet system, achievement badges, and challenge completions that make going green genuinely fun.
+
+### What Makes CarbonTrack Different?
+
+| Feature | Description |
+|---|---|
+| **Real-Time Impact Estimation** | See your CO₂ impact *before* you even submit an activity, calculated live as you fill out the form. |
+| **Maps Integration** | Implemented a demo application integration of maps. Still under development |
+| **Gamified Rewards Wallet** | Earn EcoPoints for low-carbon choices. View your transaction history, discover "Green Nodes" on an interactive heatmap, and track your rewards growth over time. |
+| **Adaptive Theming Engine** | A professionally designed Light & Dark mode system built on semantic CSS variables. Every pixel — including native browser date pickers — adapts flawlessly to the user's preference. |
+| **Smart Date Filtering** | The Activity Ledger date filters automatically prevent future date selection and intelligently handle reversed date ranges. |
+| **One-Click CSV Export** | Download your entire activity history as a CSV file for external analysis, tax records, or sustainability audits. |
 
 ---
 
