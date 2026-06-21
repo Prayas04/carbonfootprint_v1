@@ -13,7 +13,11 @@ engine = create_async_engine(
     echo=False,
     # Supabase (PgBouncer) requires prepared statements disabled
     connect_args=(
-        {"prepared_statement_cache_size": 0}
+        {
+            "server_settings": {"jit": "off"},
+            "statement_cache_size": 0,
+            "prepared_statement_cache_size": 0,
+        }
         if "postgres" in settings.DATABASE_URL
         else {}
     ),
