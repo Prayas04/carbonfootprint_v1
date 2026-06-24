@@ -3,7 +3,7 @@
  * Handles automatic Authorization header injection and token refresh on 401.
  */
 
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : '/api';
 
 /** Get stored tokens */
 function getTokens() {
