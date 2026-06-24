@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: carbontrack-backend
+    name: cfpmainv1-backend
     env: python
     plan: free
     rootDir: backend
