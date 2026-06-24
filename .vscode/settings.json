@@ -1,5 +1,7 @@
 {
   "css.lint.unknownAtRules": "ignore",
+  "python.terminal.activateEnvInCurrentTerminal": true,
+  "python.useEnvironmentsExtension": false,
   "python.defaultInterpreterPath": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
   "python.analysis.extraPaths": [
     "${workspaceFolder}/backend"

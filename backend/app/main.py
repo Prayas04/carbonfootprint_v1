@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.database import create_tables
-from app.routers import auth, dashboard, activity, wallet, insights
+from app.routers import auth, dashboard, activity, wallet, insights, chat
 
 settings = get_settings()
 
@@ -43,6 +43,7 @@ app.include_router(dashboard.router)
 app.include_router(activity.router)
 app.include_router(wallet.router)
 app.include_router(insights.router)
+app.include_router(chat.router)
 
 
 @app.get("/api/health", tags=["Health"])

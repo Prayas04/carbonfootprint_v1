@@ -27,6 +27,9 @@ class Settings(BaseSettings):
     # CORS
     CORS_ORIGINS: str
 
+    # AI Integration
+    MISTRAL_API_KEY: str | None = None
+
     @property
     def cors_origins_list(self) -> list[str]:
         return [origin.strip() for origin in self.CORS_ORIGINS.split(",")]

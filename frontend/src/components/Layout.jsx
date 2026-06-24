@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import LogActivityModal from './LogActivityModal.jsx'
 import SettingsModal from './SettingsModal.jsx'
+import ChatWidget from './ChatWidget.jsx'
 
 const navItems = [
   { icon: 'dashboard', label: 'Dashboard', path: '/dashboard' },
@@ -137,6 +138,7 @@ export default function Layout({ children }) {
         onSuccess={handleActivityLogged} 
       />
       <SettingsModal />
+      <ChatWidget />
     </div>
   )
 }

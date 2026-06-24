@@ -66,6 +66,9 @@ export default function Wallet() {
             />
           </div>
           <div className="flex items-center gap-4">
+            <button onClick={() => window.dispatchEvent(new Event('toggle-chat'))} className="text-primary bg-primary/10 hover:bg-primary/20 transition-colors h-8 w-8 flex items-center justify-center rounded-full focus:ring-1 focus:ring-primary">
+              <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>smart_toy</span>
+            </button>
             <button onClick={() => showAlert("Notifications", "No new notifications at this time.")} className="text-on-surface-variant hover:text-primary transition-colors h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-container-low focus:ring-1 focus:ring-primary">
               <span className="material-symbols-outlined text-[20px]">notifications</span>
             </button>
