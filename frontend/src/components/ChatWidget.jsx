@@ -76,10 +76,7 @@ export default function ChatWidget() {
         content: msg.text
       }));
 
-      // Base URL from env or fallback to same origin assuming API is mounted properly
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-      
-      const response = await fetch(`${API_URL}/api/chat`, {
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: apiMessages }),
